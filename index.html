@@ -223,9 +223,10 @@
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js';
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
-        import { getFirestore, doc, setDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
+        import { getFirestore, doc, setDoc, onSnapshot, getDoc } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
 
-        const firebaseConfig = {
+        // Retrieve config from global environment
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
             apiKey: "AIzaSyC1LJ2wrM_Qmx9E_2xPmzybRXVPwJCnx3s",
             authDomain: "mylomismartcard1.firebaseapp.com",
             databaseURL: "https://mylomismartcard1-default-rtdb.firebaseio.com",
@@ -240,7 +241,7 @@
         const db = getFirestore(app);
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
 
-        let CONTACT_DATA = {
+        const LATEST_BASE_DATA = {
             adminPassword: "Admin",
             name: "Sofonias Genanaw",
             organization: "Lomi Legacy", 
@@ -259,6 +260,8 @@
             ],
             customLinks: []
         };
+
+        let CONTACT_DATA = { ...LATEST_BASE_DATA };
 
         const PLATFORMS = {
             linkedin: { label: 'LinkedIn', icon: 'fa-linkedin', class: 'icon-linkedin' },
@@ -279,22 +282,31 @@
                     try {
                         await signInWithCustomToken(auth, __initial_auth_token);
                     } catch (customTokenError) {
+                        // Fallback on mismatch
                         await signInAnonymously(auth);
                     }
                 } else {
                     await signInAnonymously(auth);
                 }
             } catch (err) {
-                console.error("Auth Error:", err);
+                console.error("Auth System Error:", err);
             }
         }
 
-        onAuthStateChanged(auth, (user) => {
+        onAuthStateChanged(auth, async (user) => {
             const status = document.getElementById('syncStatus');
             if (user) {
                 authReady = true;
                 status.textContent = "SYNC: CONNECTED";
                 status.className = "status-online";
+                
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'profiles', 'default');
+                const snap = await getDoc(docRef);
+                
+                if (!snap.exists()) {
+                    await setDoc(docRef, LATEST_BASE_DATA);
+                }
+                
                 setupDataSync();
             } else {
                 authReady = false;
@@ -303,22 +315,14 @@
             }
         });
 
-        function getProfileDocRef() {
-            return doc(db, 'artifacts', appId, 'public', 'data', 'profiles', 'default');
-        }
-
         function setupDataSync() {
             if (!authReady) return;
-            const docRef = getProfileDocRef();
+            const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'profiles', 'default');
             
             onSnapshot(docRef, (snap) => {
                 if (snap.exists()) {
-                    CONTACT_DATA = { ...CONTACT_DATA, ...snap.data() };
+                    CONTACT_DATA = snap.data();
                     updateUI();
-                } else {
-                    if (authReady) {
-                        setDoc(docRef, CONTACT_DATA).catch(e => console.error("Init save fail:", e));
-                    }
                 }
             }, (err) => {
                 console.error("Sync Error:", err);
@@ -497,7 +501,8 @@
                     })).filter(l => l.label.trim() && l.url.trim())
                 };
 
-                await setDoc(getProfileDocRef(), updated);
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'profiles', 'default');
+                await setDoc(docRef, updated);
                 window.toggleView('card');
             } catch (err) {
                 console.error("Save Error:", err);
