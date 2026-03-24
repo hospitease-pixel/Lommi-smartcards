@@ -225,15 +225,16 @@
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
         import { getFirestore, doc, setDoc, onSnapshot, getDoc } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
 
-        // Retrieve config from global environment
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
+        // Updated Firebase configuration
+        const firebaseConfig = {
             apiKey: "AIzaSyC1LJ2wrM_Qmx9E_2xPmzybRXVPwJCnx3s",
             authDomain: "mylomismartcard1.firebaseapp.com",
             databaseURL: "https://mylomismartcard1-default-rtdb.firebaseio.com",
             projectId: "mylomismartcard1",
             storageBucket: "mylomismartcard1.firebasestorage.app",
             messagingSenderId: "193639141242",
-            appId: "1:193639141242:web:08dd9d02e5a320d0b7d0c3"
+            appId: "1:193639141242:web:08dd9d02e5a320d0b7d0c3",
+            measurementId: "G-6SVM8N7TK3"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -241,6 +242,7 @@
         const db = getFirestore(app);
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
 
+        // THE SOURCE OF TRUTH (Base Details)
         const LATEST_BASE_DATA = {
             adminPassword: "Admin",
             name: "Sofonias Genanaw",
@@ -278,18 +280,19 @@
 
         async function runAuth() {
             try {
+                // If token is provided, attempt custom login, otherwise anonymous
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
                     try {
                         await signInWithCustomToken(auth, __initial_auth_token);
-                    } catch (customTokenError) {
-                        // Fallback on mismatch
+                    } catch (e) {
+                        // If token mismatch (the error you saw), fallback to anonymous
                         await signInAnonymously(auth);
                     }
                 } else {
                     await signInAnonymously(auth);
                 }
             } catch (err) {
-                console.error("Auth System Error:", err);
+                console.error("Critical Auth Error:", err);
             }
         }
 
@@ -300,6 +303,7 @@
                 status.textContent = "SYNC: CONNECTED";
                 status.className = "status-online";
                 
+                // Check if profile exists, if not, save current details as initial profile
                 const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'profiles', 'default');
                 const snap = await getDoc(docRef);
                 
@@ -325,7 +329,7 @@
                     updateUI();
                 }
             }, (err) => {
-                console.error("Sync Error:", err);
+                console.error("Firestore Sync Error:", err);
             });
         }
 
@@ -534,6 +538,7 @@
             l.click();
         };
 
+        // Initialize UI and Auth
         updateUI();
         runAuth();
     </script>
