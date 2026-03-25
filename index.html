@@ -37,7 +37,6 @@
         .icon-instagram { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #405ded 90%); color: white; } 
         
         .static-watermark { opacity: 0.25; width: 85%; height: 85%; filter: grayscale(20%); }
-        
         .hidden-view { display: none !important; }
         
         #syncStatus { position: fixed; bottom: 10px; right: 10px; padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: bold; z-index: 1000; }
@@ -45,7 +44,6 @@
         .status-offline { background: #fee2e2; color: #991b1b; border: 1px solid #991b1b; }
 
         #loadingOverlay { position: fixed; inset: 0; background: rgba(17, 24, 39, 0.8); backdrop-filter: blur(4px); display: none; justify-content: center; align-items: center; z-index: 9999; }
-        
         .upload-preview { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; border: 2px solid #e5e7eb; background: #f3f4f6; }
     </style>
 </head>
@@ -225,7 +223,7 @@
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
         import { getFirestore, doc, setDoc, onSnapshot, getDoc } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
 
-        // Updated Firebase configuration
+        // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyC1LJ2wrM_Qmx9E_2xPmzybRXVPwJCnx3s",
             authDomain: "mylomismartcard1.firebaseapp.com",
@@ -240,9 +238,10 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        
+        // UNIQUE IDENTIFIER: Using a specific ID for Sofonias to prevent data collision
+        const appId = "sofonias-genanaw-unique-card-2024";
 
-        // THE SOURCE OF TRUTH (Base Details)
         const LATEST_BASE_DATA = {
             adminPassword: "Admin",
             name: "Sofonias Genanaw",
@@ -280,12 +279,10 @@
 
         async function runAuth() {
             try {
-                // If token is provided, attempt custom login, otherwise anonymous
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
                     try {
                         await signInWithCustomToken(auth, __initial_auth_token);
                     } catch (e) {
-                        // If token mismatch (the error you saw), fallback to anonymous
                         await signInAnonymously(auth);
                     }
                 } else {
@@ -303,7 +300,6 @@
                 status.textContent = "SYNC: CONNECTED";
                 status.className = "status-online";
                 
-                // Check if profile exists, if not, save current details as initial profile
                 const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'profiles', 'default');
                 const snap = await getDoc(docRef);
                 
