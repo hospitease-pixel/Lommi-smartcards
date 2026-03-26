@@ -3,67 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lomi Legacy - Digital Business Card</title>
-    
+    <title>Sofonias Genanaw - Digital Business Card</title>
     <!-- Open Graph for Social Sharing -->
-    <meta property="og:title" content="Lomi Legacy- Digital Business Card" />
+    <meta property="og:title" content="Lomi Legacy - Digital Business Card" />
     <meta property="og:description" content="Founder & CEO of Lomi Legacy. One Tap.Done" />
-     <meta property="og:image" content="https://i.ibb.co/zTR9JFVx/Lomi-smart-card-20260324-153530-0000.png" /> 
+    <meta property="og:image" content="https://i.ibb.co/zTR9JFVx/Lomi-smart-card-20260324-153530-0000.png" /> 
     <meta property="og:type" content="website" />
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
-    
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <style>
-        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-        .contact-btn { transition: all 0.2s; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
-        .contact-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
-        .wave-background { background-color: #ffffff; position: relative; overflow: hidden; z-index: 1; border-bottom: 5px solid #3b82f6; }
-        .graph-pattern-background { background-color: #ffffff; background-image: radial-gradient(#e5e7eb 1px, transparent 1px); background-size: 20px 20px; }
-        
-        .strip-decoration { position: absolute; width: 450px; height: 10px; background-color: #1f2937; transform: rotate(-45deg); opacity: 1; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            --theme-primary: #3b82f6;
+            --theme-secondary: #1f2937;
+            --theme-accent: #eab308;
+            --theme-bg: #ffffff;
+        }
+        .contact-btn { transition: all 0.2s; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); background: var(--theme-primary, #3b82f6);}
+        .contact-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); background: var(--theme-accent, #eab308);}
+        .wave-background { background-color: var(--theme-bg, #ffffff); position: relative; overflow: hidden; z-index: 1; border-bottom: 5px solid var(--theme-primary, #3b82f6); }
+        .graph-pattern-background { background-color: var(--theme-bg, #ffffff); background-image: radial-gradient(#e5e7eb 1px, transparent 1px); background-size: 20px 20px; }
+        .strip-decoration { position: absolute; width: 450px; height: 10px; background-color: var(--theme-secondary, #1f2937); transform: rotate(-45deg); opacity: 1; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
         .strip-ur-1 { top: -100px; right: -150px; z-index: 0; } 
         .strip-ur-2 { top: -60px; right: -110px; z-index: 0; } 
         .strip-ll-1 { bottom: -100px; left: -150px; z-index: 5; } 
         .strip-ll-2 { bottom: -60px; left: -110px; z-index: 5; }
-        
         .icon-facebook { background-color: #1877F2; color: white; }
         .icon-linkedin { background-color: #0A66C2; color: white; }
         .icon-telegram { background-color: #26A5E4; color: white; }
         .icon-whatsapp { background-color: #25D366; color: white; } 
         .icon-tiktok { background-color: #000000; color: white; } 
         .icon-instagram { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #405ded 90%); color: white; } 
-        
-        .static-watermark { opacity: 0.001; width: 85%; height: 85%; filter: grayscale(1%); }
+        .static-watermark { opacity: 0.0001; width: 0%; height: 0%; filter: grayscale(0%); }
         .hidden-view { display: none !important; }
-        
         #syncStatus { position: fixed; bottom: 10px; right: 10px; padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: bold; z-index: 1000; }
         .status-online { background: #dcfce7; color: #166534; border: 1px solid #166534; }
         .status-offline { background: #fee2e2; color: #991b1b; border: 1px solid #991b1b; }
-
         #loadingOverlay { position: fixed; inset: 0; background: rgba(17, 24, 39, 0.8); backdrop-filter: blur(4px); display: none; justify-content: center; align-items: center; z-index: 9999; }
         .upload-preview { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; border: 2px solid #e5e7eb; background: #f3f4f6; }
+        .font-style-controller label { margin-right: 4px; }
     </style>
 </head>
-<body class="min-h-screen bg-gray-900 flex flex-col items-center py-8 px-4">
-
+<body class="min-h-screen bg-gray-900 flex flex-col items-center py-8 px-4" 
+      style="--theme-primary:#3b82f6; --theme-secondary:#1f2937; --theme-accent:#eab308; --theme-bg:#ffffff;">
     <div id="loadingOverlay">
         <div class="flex flex-col items-center gap-4">
             <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-            <p class="text-white text-sm font-medium">Syncing ...</p>
+            <p class="text-white text-sm font-medium">Syncing profile...</p>
         </div>
     </div>
-
-    <div id="syncStatus" class="status-offline">OFFLINE</div>
-
-    <!-- Admin Access Trigger -->
+    <div id="syncStatus" class="status-offline">SYNC: OFFLINE</div>
     <button id="authBtn" class="fixed top-4 right-4 bg-gray-800/80 backdrop-blur-sm text-white p-2 rounded-full shadow-lg z-50 hover:bg-gray-700">
         <i data-lucide="settings" class="w-5 h-5"></i>
     </button>
-
-    <!-- Login View -->
     <div id="loginView" class="hidden-view max-w-sm w-full bg-white p-8 rounded-3xl shadow-2xl mt-20">
         <div class="flex flex-col items-center mb-6">
             <div class="bg-blue-100 p-3 rounded-full mb-4">
@@ -72,23 +69,19 @@
             <h2 class="text-2xl font-bold text-gray-800">Admin Login</h2>
         </div>
         <div class="space-y-4">
-            <input type="password" id="loginPass" placeholder="Enter Password" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none">
+            <input type="password" id="loginPass" placeholder="Enter Admin Password" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none">
             <button id="doLogin" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold shadow-lg">Access Dashboard</button>
             <button onclick="window.toggleView('card')" class="w-full text-gray-500 text-sm">Cancel</button>
         </div>
     </div>
-
-    <!-- Editor View -->
     <div id="editView" class="hidden-view max-w-4xl w-full bg-white p-8 rounded-3xl shadow-2xl my-8 overflow-y-auto max-h-[90vh]">
         <div class="flex justify-between items-center mb-6 border-b pb-4">
             <h2 class="text-2xl font-bold text-gray-800">Admin Dashboard</h2>
             <button onclick="window.toggleView('card')" class="text-gray-400 hover:text-gray-600"><i data-lucide="x" class="w-6 h-6"></i></button>
         </div>
-        
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div class="space-y-6">
                 <h3 class="font-bold text-blue-600 border-b pb-1">Media Assets</h3>
-                
                 <div class="space-y-4">
                     <div>
                         <label class="block text-[10px] font-bold uppercase text-gray-400 mb-2">Profile Picture</label>
@@ -100,7 +93,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div>
                         <label class="block text-[10px] font-bold uppercase text-gray-400 mb-2">Company Logo</label>
                         <div class="flex items-center gap-4 p-3 border rounded-xl bg-gray-50">
@@ -112,18 +104,127 @@
                         </div>
                     </div>
                 </div>
-
                 <h3 class="font-bold text-blue-600 border-b pb-1">Profile Info</h3>
                 <div class="space-y-3">
-                    <input type="text" id="editName" placeholder="Full Name" class="w-full p-2 border rounded">
-                    <input type="text" id="editOrg" placeholder="Organization" class="w-full p-2 border rounded">
-                    <input type="text" id="editTitle" placeholder="Job Title" class="w-full p-2 border rounded">
-                    <textarea id="editBio" placeholder="Bio / Slogan" class="w-full p-2 border rounded h-20 text-sm"></textarea>
+                    <div>
+                        <input type="text" id="editName" placeholder="Full Name" class="w-full p-2 border rounded">
+                        <div class="font-style-controller mt-1 text-xs flex flex-wrap items-center gap-2">
+                            <span class="mr-1 text-gray-500">Font style:</span>
+                            <label><input type="checkbox" id="nameFontBold"> Bold</label>
+                            <label><input type="checkbox" id="nameFontItalic"> Italic</label>
+                            <label><input type="checkbox" id="nameFontUnderline"> Underline</label>
+                        </div>
+                    </div>
+                    <div>
+                        <input type="text" id="editOrg" placeholder="Organization" class="w-full p-2 border rounded">
+                        <div class="font-style-controller mt-1 text-xs flex flex-wrap items-center gap-2">
+                            <span class="mr-1 text-gray-500">Font style:</span>
+                            <label><input type="checkbox" id="orgFontBold"> Bold</label>
+                            <label><input type="checkbox" id="orgFontItalic"> Italic</label>
+                            <label><input type="checkbox" id="orgFontUnderline"> Underline</label>
+                        </div>
+                    </div>
+                    <div>
+                        <input type="text" id="editTitle" placeholder="Job Title" class="w-full p-2 border rounded">
+                        <div class="font-style-controller mt-1 text-xs flex flex-wrap items-center gap-2">
+                            <span class="mr-1 text-gray-500">Font style:</span>
+                            <label><input type="checkbox" id="titleFontBold"> Bold</label>
+                            <label><input type="checkbox" id="titleFontItalic"> Italic</label>
+                            <label><input type="checkbox" id="titleFontUnderline"> Underline</label>
+                        </div>
+                    </div>
+                    <div>
+                        <textarea id="editBio" placeholder="Bio / Slogan" class="w-full p-2 border rounded h-20 text-sm"></textarea>
+                        <div class="font-style-controller mt-1 text-xs flex flex-wrap items-center gap-2">
+                            <span class="mr-1 text-gray-500">Font style:</span>
+                            <label><input type="checkbox" id="bioFontBold"> Bold</label>
+                            <label><input type="checkbox" id="bioFontItalic"> Italic</label>
+                            <label><input type="checkbox" id="bioFontUnderline"> Underline</label>
+                        </div>
+                    </div>
                     <input type="email" id="editEmail" placeholder="Email Address" class="w-full p-2 border rounded">
                     <input type="text" id="editWebsite" placeholder="Website URL" class="w-full p-2 border rounded">
                     <input type="text" id="editLocation" placeholder="Google Maps URL" class="w-full p-2 border rounded">
                 </div>
-
+                <div>
+                    <h3 class="font-bold text-blue-600 border-b pb-1 mt-6">Theme Colors</h3>
+                    <div class="space-y-3 p-3 bg-blue-50 rounded-xl border border-blue-100 flex flex-wrap gap-4">
+                        <div>
+                            <label class="text-xs font-bold text-gray-700">Primary:</label>
+                            <input type="color" id="editThemePrimary" class="w-10 h-8 border rounded" />
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-gray-700">Secondary:</label>
+                            <input type="color" id="editThemeSecondary" class="w-10 h-8 border rounded" />
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-gray-700">Accent:</label>
+                            <input type="color" id="editThemeAccent" class="w-10 h-8 border rounded" />
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-gray-700">Background:</label>
+                            <input type="color" id="editThemeBackground" class="w-10 h-8 border rounded" />
+                        </div>
+                    </div>
+                </div>
+                <div>
+                  <h3 class="font-bold text-blue-600 border-b pb-1 mt-6">Text Colors</h3>
+                  <div class="space-y-3 p-3 bg-gray-50 rounded-xl border border-gray-200 flex flex-wrap gap-4">
+                    <div>
+                      <label class="text-xs font-bold text-gray-700">Name:</label>
+                      <input type="color" id="editTextNameColor" class="w-10 h-8 border rounded" />
+                    </div>
+                    <div>
+                      <label class="text-xs font-bold text-gray-700">Company:</label>
+                      <input type="color" id="editTextCompanyColor" class="w-10 h-8 border rounded" />
+                    </div>
+                    <div>
+                      <label class="text-xs font-bold text-gray-700">Title:</label>
+                      <input type="color" id="editTextTitleColor" class="w-10 h-8 border rounded" />
+                    </div>
+                    <div>
+                      <label class="text-xs font-bold text-gray-700">Slogan:</label>
+                      <input type="color" id="editTextBioColor" class="w-10 h-8 border rounded" />
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <h3 class="font-bold text-blue-600 border-b pb-1 mt-6">Button Colors</h3>
+                  <div class="space-y-3 p-3 bg-gray-50 rounded-xl border border-gray-200 flex flex-wrap gap-4">
+                    <div>
+                      <label class="text-xs font-bold text-gray-700">Download Card BG</label>
+                      <input type="color" id="editDownloadBtnBg" class="w-10 h-8 border rounded">
+                    </div>
+                    <div>
+                      <label class="text-xs font-bold text-gray-700">Download Card Text</label>
+                      <input type="color" id="editDownloadBtnText" class="w-10 h-8 border rounded">
+                    </div>
+                    <div>
+                      <label class="text-xs font-bold text-gray-700">Add to Contacts BG</label>
+                      <input type="color" id="editAddToContactsBtnBg" class="w-10 h-8 border rounded">
+                    </div>
+                    <div>
+                      <label class="text-xs font-bold text-gray-700">Add to Contacts Text</label>
+                      <input type="color" id="editAddToContactsBtnText" class="w-10 h-8 border rounded">
+                    </div>
+                    <div>
+                      <label class="text-xs font-bold text-gray-700">Send Email BG</label>
+                      <input type="color" id="editEmailBtnBg" class="w-10 h-8 border rounded">
+                    </div>
+                    <div>
+                      <label class="text-xs font-bold text-gray-700">Send Email Text</label>
+                      <input type="color" id="editEmailBtnText" class="w-10 h-8 border rounded">
+                    </div>
+                    <div>
+                      <label class="text-xs font-bold text-gray-700">Call Button BG</label>
+                      <input type="color" id="editCallBtnBg" class="w-10 h-8 border rounded">
+                    </div>
+                    <div>
+                      <label class="text-xs font-bold text-gray-700">Phone Number Text</label>
+                      <input type="color" id="editCallBtnText" class="w-10 h-8 border rounded">
+                    </div>
+                  </div>
+                </div>
                 <h3 class="font-bold text-red-600 border-b pb-1 mt-6">Security</h3>
                 <div class="space-y-3 p-3 bg-red-50 rounded-xl border border-red-100">
                     <label class="block text-[10px] font-bold uppercase text-red-400">Admin Password</label>
@@ -135,7 +236,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="space-y-6">
                 <div>
                     <div class="flex justify-between items-center border-b pb-1 mb-3">
@@ -144,7 +244,6 @@
                     </div>
                     <div id="phonesEditor" class="space-y-2"></div>
                 </div>
-
                 <div>
                     <div class="flex justify-between items-center border-b pb-1 mb-3">
                         <h3 class="font-bold text-blue-600">Socials</h3>
@@ -152,7 +251,6 @@
                     </div>
                     <div id="socialsEditor" class="space-y-2"></div>
                 </div>
-
                 <div>
                     <div class="flex justify-between items-center border-b pb-1 mb-3">
                         <h3 class="font-bold text-blue-600">Custom Links</h3>
@@ -162,13 +260,10 @@
                 </div>
             </div>
         </div>
-
         <button id="saveEdit" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold mt-8 shadow-xl hover:bg-blue-700 transition-all">
-            Publish
+            Publish Changes Globally
         </button>
     </div>
-
-    <!-- Main Card View -->
     <div id="cardView" class="w-full flex flex-col items-center">
         <div id="id-card-content" class="graph-pattern-background max-w-sm w-full mx-auto p-4 md:p-6 rounded-3xl border-2 border-gray-200 shadow-2xl relative overflow-hidden mb-6">
             <div class="wave-background absolute top-0 left-0 right-0 h-64 -mt-2 -mx-1 rounded-t-[1.5rem]">
@@ -176,15 +271,11 @@
                     <img id="companyLogo" src="" alt="Logo" class="w-full h-full object-contain">
                 </div>
             </div>
-            
-            <!-- Static Watermark -->
             <div class="absolute inset-0 z-0 pointer-events-none flex justify-center items-center" style="top: 25%;">
                 <img src="https://i.ibb.co/ym404nTr/No-BG-Lomi.png" alt="Watermark" class="static-watermark object-contain">
             </div>
-
             <div class="strip-decoration strip-ur-1"></div><div class="strip-decoration strip-ur-2"></div>
             <div class="strip-decoration strip-ll-1"></div><div class="strip-decoration strip-ll-2"></div>
-
             <div class="relative z-10 pt-40"> 
                 <div class="text-center mb-6"> 
                     <div class="relative w-32 h-32 mx-auto rounded-full border-4 border-white shadow-xl overflow-hidden bg-white">
@@ -195,348 +286,488 @@
                     <p id="display-title" class="text-md font-semibold text-gray-800">...</p>
                     <p id="display-bio" class="text-sm font-medium text-gray-500 italic mt-2 px-4"></p>
                 </div>
-
                 <div class="mt-4 border-t border-b py-4">
                     <div id="social-container" class="flex flex-wrap justify-center gap-3"></div>
                 </div>
-
                 <div id="custom-links-container" class="mt-4 flex flex-col gap-2"></div>
-
                 <div id="phone-buttons-container" class="space-y-3 mt-6"></div>
                 <div id="contact-buttons-container" class="space-y-3 mt-3"></div>
-
                 <div class="mt-6 flex gap-2">
                     <a href="#" target="_blank" id="btn-website" class="flex-1 flex items-center justify-center p-3 bg-gray-100 rounded-lg text-sm font-bold"><i data-lucide="globe" class="w-4 h-4 mr-2"></i>Website</a>
                     <a href="#" target="_blank" id="btn-location" class="flex-1 flex items-center justify-center p-3 bg-gray-100 rounded-lg text-sm font-bold"><i data-lucide="map-pin" class="w-4 h-4 mr-2"></i>Location</a>
                 </div>
-
                 <div class="mt-8 space-y-3">
-                    <button id="downloadButton" class="w-full flex items-center justify-center p-4 bg-blue-600 text-white font-bold rounded-xl shadow-lg">Download Card Image</button>
-                    <button id="vcfButton" class="w-full flex items-center justify-center p-4 bg-black text-white font-bold rounded-xl shadow-lg">Add to Contacts</button>
+                    <button id="downloadButton" class="w-full flex items-center justify-center p-4 font-bold rounded-xl shadow-lg">Download Card Image</button>
+                    <button id="vcfButton" class="w-full flex items-center justify-center p-4 font-bold rounded-xl shadow-lg">Add to Contacts</button>
+                    <button id="qrBtn" class="w-full flex items-center justify-center p-4 font-bold rounded-xl shadow-lg">Download QR Code</button>
+                    <div id="qrCodeBox" class="flex justify-center py-4"></div>
+                    <a 
+                      href="https://wa.me/251920508303?text=I%20want%20to%20order%20an%20NFC%20business%20card!" 
+                      target="_blank" 
+                      class="block text-xs mx-auto mt-2 w-max px-4 py-2 bg-green-500 text-white font-bold rounded-full shadow-lg hover:bg-green-600 transition-colors">
+                      Order your NFC business card
+                    </a>
                 </div>
             </div> 
         </div>
     </div>
-
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js';
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
-        import { getFirestore, doc, setDoc, onSnapshot, getDoc } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
+import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
+import { getFirestore, doc, setDoc, onSnapshot, getDoc } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
 
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyC1LJ2wrM_Qmx9E_2xPmzybRXVPwJCnx3s",
-            authDomain: "mylomismartcard1.firebaseapp.com",
-            databaseURL: "https://mylomismartcard1-default-rtdb.firebaseio.com",
-            projectId: "mylomismartcard1",
-            storageBucket: "mylomismartcard1.firebasestorage.app",
-            messagingSenderId: "193639141242",
-            appId: "1:193639141242:web:08dd9d02e5a320d0b7d0c3",
-            measurementId: "G-6SVM8N7TK3"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        
-        // UNIQUE IDENTIFIER: Using a specific ID for Sofonias to prevent data collision
-        const appId = "sofonias-genanaw-unique-card-2024";
-
-        const LATEST_BASE_DATA = {
-            adminPassword: "Admin",
-            name: "Lomi Legacy",
-            organization: "Lomi Smart Cards", 
-            title: "Founder & CEO",
-            bio: "One Tap.Done",
-            image: "https://i.ibb.co/ym404nTr/No-BG-Lomi.png",
-            logo: "https://i.ibb.co/zTR9JFVx/Lomi-smart-card-20260324-153530-0000.png",
-            phones: ["0920508303"],
-            email: "lomilegacy@gmail.com",
-            website: "https://sofonias-g.vercel.app",
-            location: "https://maps.app.goo.gl/7fNW5PpJraVmqeCd7",
-            socialLinks: [
-                { platform: 'instagram', url: '#' },
-                { platform: 'facebook', url: '#' },
-                { platform: 'telegram', url: '#' }
-            ],
-            customLinks: []
-        };
-
-        let CONTACT_DATA = { ...LATEST_BASE_DATA };
-
-        const PLATFORMS = {
-            linkedin: { label: 'LinkedIn', icon: 'fa-linkedin', class: 'icon-linkedin' },
-            instagram: { label: 'Instagram', icon: 'fa-instagram', class: 'icon-instagram' },
-            facebook: { label: 'Facebook', icon: 'fa-facebook', class: 'icon-facebook' },
-            tiktok: { label: 'TikTok', icon: 'fa-tiktok', class: 'icon-tiktok' },
-            telegram: { label: 'Telegram', icon: 'fa-telegram', class: 'icon-telegram' },
-            whatsapp: { label: 'WhatsApp', icon: 'fa-whatsapp', class: 'icon-whatsapp' }
-        };
-
-        let tempProfileBase64 = CONTACT_DATA.image;
-        let tempLogoBase64 = CONTACT_DATA.logo;
-        let authReady = false;
-
-        async function runAuth() {
+const firebaseConfig = {
+    apiKey: "AIzaSyC1LJ2wrM_Qmx9E_2xPmzybRXVPwJCnx3s",
+    authDomain: "mylomismartcard1.firebaseapp.com",
+    databaseURL: "https://mylomismartcard1-default-rtdb.firebaseio.com",
+    projectId: "mylomismartcard1",
+    storageBucket: "mylomismartcard1",
+    messagingSenderId: "193639141242",
+    appId: "1:193639141242:web:08dd9d02e5a320d0b7d0c3",
+    measurementId: "G-6SVM8N7TK3"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const appId = "sofonias-genanaw-unique-card-2024";
+const LATEST_BASE_DATA = {
+    adminPassword: "Admin",
+    name: "Lomi Smart Cards",
+    organization: "Lomi Legacy", 
+    title: "Founder & CEO",
+    bio: "One Tap.Done",
+    image: "https://i.ibb.co/ym404nTr/No-BG-Lomi.png",
+    logo: "https://i.ibb.co/zTR9JFVx/Lomi-smart-card-20260324-153530-0000.png",
+    phones: ["0920508303"],
+    email: "lomismartcard2@gmail.com",
+    website: "https://sofonias-g.vercel.app",
+    location: "https://maps.app.goo.gl/7fNW5PpJraVmqeCd7",
+    socialLinks: [
+        { platform: 'instagram', url: '#' },
+        { platform: 'facebook', url: '#' },
+        { platform: 'telegram', url: '#' }
+    ],
+    customLinks: [],
+    theme: {
+        primary: "#3b82f6",
+        secondary: "#1f2937",
+        accent: "#eab308",
+        background: "#ffffff",
+        nameText: "#1e293b",
+        companyText: "#3b82f6",
+        titleText: "#333333",
+        bioText: "#64748b",
+        downloadBtnBg: "#2563eb",
+        downloadBtnText: "#ffffff",
+        addToContactsBtnBg: "#000000",
+        addToContactsBtnText: "#ffffff",
+        emailBtnBg: "#dc2626",
+        emailBtnText: "#ffffff",
+        callBtnBg: "#22c55e",
+        callBtnText: "#ffffff",
+        nameFontStyle: {bold:true, italic:false, underline:false},
+        orgFontStyle: {bold:true, italic:false, underline:false},
+        titleFontStyle: {bold:false, italic:false, underline:false},
+        bioFontStyle: {bold:false, italic:true, underline:false},
+    }
+};
+let CONTACT_DATA = { ...LATEST_BASE_DATA };
+const PLATFORMS = {
+    linkedin: { label: 'LinkedIn', icon: 'fa-linkedin', class: 'icon-linkedin' },
+    instagram: { label: 'Instagram', icon: 'fa-instagram', class: 'icon-instagram' },
+    facebook: { label: 'Facebook', icon: 'fa-facebook', class: 'icon-facebook' },
+    tiktok: { label: 'TikTok', icon: 'fa-tiktok', class: 'icon-tiktok' },
+    telegram: { label: 'Telegram', icon: 'fa-telegram', class: 'icon-telegram' },
+    whatsapp: { label: 'WhatsApp', icon: 'fa-whatsapp', class: 'icon-whatsapp' }
+};
+let tempProfileBase64 = CONTACT_DATA.image;
+let tempLogoBase64 = CONTACT_DATA.logo;
+let authReady = false;
+async function runAuth() {
+    try {
+        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
             try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    try {
-                        await signInWithCustomToken(auth, __initial_auth_token);
-                    } catch (e) {
-                        await signInAnonymously(auth);
-                    }
-                } else {
-                    await signInAnonymously(auth);
-                }
-            } catch (err) {
-                console.error("Critical Auth Error:", err);
+                await signInWithCustomToken(auth, __initial_auth_token);
+            } catch (e) {
+                await signInAnonymously(auth);
             }
+        } else {
+            await signInAnonymously(auth);
         }
-
-        onAuthStateChanged(auth, async (user) => {
-            const status = document.getElementById('syncStatus');
-            if (user) {
-                authReady = true;
-                status.textContent = "CONNECTED";
-                status.className = "status-online";
-                
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'profiles', 'default');
-                const snap = await getDoc(docRef);
-                
-                if (!snap.exists()) {
-                    await setDoc(docRef, LATEST_BASE_DATA);
-                }
-                
-                setupDataSync();
-            } else {
-                authReady = false;
-                status.textContent = "OFFLINE";
-                status.className = "status-offline";
-            }
-        });
-
-        function setupDataSync() {
-            if (!authReady) return;
-            const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'profiles', 'default');
-            
-            onSnapshot(docRef, (snap) => {
-                if (snap.exists()) {
-                    CONTACT_DATA = snap.data();
-                    updateUI();
-                }
-            }, (err) => {
-                console.error("Firestore Sync Error:", err);
-            });
+    } catch (err) {
+        console.error("Critical Auth Error:", err);
+    }
+}
+onAuthStateChanged(auth, async (user) => {
+    const status = document.getElementById('syncStatus');
+    if (user) {
+        authReady = true;
+        status.textContent = "CONNECTED";
+        status.className = "status-online";
+        const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'profiles', 'default');
+        let snap = await getDoc(docRef);
+        if (!snap.exists()) {
+            await setDoc(docRef, LATEST_BASE_DATA);
+            CONTACT_DATA = { ...LATEST_BASE_DATA };
+        } else {
+            CONTACT_DATA = snap.data();
         }
-
-        function updateUI() {
-            document.getElementById('display-name').textContent = CONTACT_DATA.name;
-            document.getElementById('display-org').textContent = CONTACT_DATA.organization;
-            document.getElementById('display-title').textContent = CONTACT_DATA.title;
-            document.getElementById('display-bio').textContent = CONTACT_DATA.bio || "";
-            document.getElementById('profilePicture').src = CONTACT_DATA.image;
-            document.getElementById('companyLogo').src = CONTACT_DATA.logo || "";
-            document.getElementById('btn-website').href = CONTACT_DATA.website || '#';
-            document.getElementById('btn-location').href = CONTACT_DATA.location || '#';
-            
-            const cLContainer = document.getElementById('custom-links-container');
-            cLContainer.innerHTML = (CONTACT_DATA.customLinks || []).map(link => `
-                <a href="${link.url}" target="_blank" class="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow">
-                    <span class="text-sm font-bold text-gray-800">${link.label}</span>
-                    <i data-lucide="external-link" class="w-4 h-4 text-gray-400"></i>
-                </a>
-            `).join('');
-
-            const pContainer = document.getElementById('phone-buttons-container');
-            pContainer.innerHTML = (CONTACT_DATA.phones || []).map(num => `
-                <a href="tel:${num}" class="contact-btn flex items-center justify-center p-3 bg-blue-600 text-white font-semibold rounded-lg">
-                    <i data-lucide="phone" class="w-5 h-5 mr-2"></i>Call: ${num}
-                </a>
-            `).join('');
-
-            const eContainer = document.getElementById('contact-buttons-container');
-            eContainer.innerHTML = CONTACT_DATA.email ? `<a href="mailto:${CONTACT_DATA.email}" class="contact-btn flex items-center justify-center p-3 bg-red-600 text-white font-semibold rounded-lg"><i data-lucide="mail" class="w-5 h-5 mr-2"></i>Send Email</a>` : "";
-
-            const sContainer = document.getElementById('social-container');
-            sContainer.innerHTML = (CONTACT_DATA.socialLinks || []).map(s => {
-                const p = PLATFORMS[s.platform];
-                if (!p) return "";
-                return `<a href="${s.url}" target="_blank" class="w-10 h-10 flex items-center justify-center rounded-full shadow-md ${p.class} transform hover:scale-110 transition-transform"><i class="fa-brands ${p.icon} text-xl"></i></a>`;
-            }).join('');
-
-            lucide.createIcons();
-        }
-
-        function fileToBase64(file) {
-            return new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.onload = (e) => resolve(e.target.result);
-                reader.readAsDataURL(file);
-            });
-        }
-
-        document.getElementById('uploadProfile').onchange = async (e) => {
-            if (e.target.files?.[0]) {
-                tempProfileBase64 = await fileToBase64(e.target.files[0]);
-                document.getElementById('editProfilePreview').src = tempProfileBase64;
-            }
-        };
-
-        document.getElementById('uploadLogo').onchange = async (e) => {
-            if (e.target.files?.[0]) {
-                tempLogoBase64 = await fileToBase64(e.target.files[0]);
-                document.getElementById('editLogoPreview').src = tempLogoBase64;
-            }
-        };
-
-        window.toggleView = (v) => {
-            ['cardView', 'loginView', 'editView'].forEach(id => document.getElementById(id).classList.add('hidden-view'));
-            const target = document.getElementById(v + 'View');
-            if (target) target.classList.remove('hidden-view');
-        };
-
-        document.getElementById('authBtn').onclick = () => window.toggleView('login');
-
-        document.getElementById('doLogin').onclick = () => {
-            const pass = document.getElementById('loginPass').value;
-            if (pass === CONTACT_DATA.adminPassword) {
-                loadEditForm();
-                window.toggleView('edit');
-                document.getElementById('loginPass').value = "";
-            } else {
-                const msg = document.createElement('div');
-                msg.className = "text-red-500 text-xs text-center mt-2";
-                msg.innerText = "Incorrect Password";
-                document.getElementById('loginView').appendChild(msg);
-                setTimeout(() => msg.remove(), 2000);
-            }
-        };
-
-        function loadEditForm() {
-            document.getElementById('editName').value = CONTACT_DATA.name;
-            document.getElementById('editOrg').value = CONTACT_DATA.organization;
-            document.getElementById('editTitle').value = CONTACT_DATA.title;
-            document.getElementById('editBio').value = CONTACT_DATA.bio || "";
-            document.getElementById('editEmail').value = CONTACT_DATA.email;
-            document.getElementById('editWebsite').value = CONTACT_DATA.website;
-            document.getElementById('editLocation').value = CONTACT_DATA.location;
-            document.getElementById('editPassword').value = CONTACT_DATA.adminPassword;
-            document.getElementById('editProfilePreview').src = CONTACT_DATA.image;
-            document.getElementById('editLogoPreview').src = CONTACT_DATA.logo || "";
-            
-            tempProfileBase64 = CONTACT_DATA.image;
-            tempLogoBase64 = CONTACT_DATA.logo;
-
-            const ph = document.getElementById('phonesEditor');
-            ph.innerHTML = "";
-            (CONTACT_DATA.phones || []).forEach(p => ph.appendChild(createPhoneItem(p)));
-
-            const soc = document.getElementById('socialsEditor');
-            soc.innerHTML = "";
-            (CONTACT_DATA.socialLinks || []).forEach(s => soc.appendChild(createSocialItem(s.platform, s.url)));
-
-            const cl = document.getElementById('customLinksEditor');
-            cl.innerHTML = "";
-            (CONTACT_DATA.customLinks || []).forEach(link => cl.appendChild(createCustomLinkItem(link.label, link.url)));
-
-            lucide.createIcons();
-        }
-
-        function createPhoneItem(v = "") {
-            const d = document.createElement('div');
-            d.className = "flex gap-2";
-            d.innerHTML = `<input type="text" value="${v}" class="phone-input flex-1 p-2 border rounded text-sm"><button onclick="this.parentElement.remove()" class="text-red-500 px-2 font-bold">×</button>`;
-            return d;
-        }
-
-        function createSocialItem(p = "linkedin", u = "") {
-            const d = document.createElement('div');
-            d.className = "flex flex-col gap-1 p-2 bg-gray-50 rounded border relative";
-            let opts = Object.keys(PLATFORMS).map(k => `<option value="${k}" ${k===p?'selected':''}>${k}</option>`).join('');
-            d.innerHTML = `<button onclick="this.parentElement.remove()" class="absolute top-1 right-1 text-red-500 font-bold">×</button>
-                           <select class="social-platform p-1 text-xs bg-white border">${opts}</select>
-                           <input type="text" value="${u}" class="social-url p-1 text-xs border" placeholder="URL">`;
-            return d;
-        }
-
-        function createCustomLinkItem(l = "", u = "") {
-            const d = document.createElement('div');
-            d.className = "flex flex-col gap-1 p-3 bg-gray-50 rounded-xl border relative";
-            d.innerHTML = `<button onclick="this.parentElement.remove()" class="absolute top-2 right-2 text-red-500 font-bold">×</button>
-                           <input type="text" value="${l}" class="custom-link-label p-2 text-xs border rounded mb-1" placeholder="Link Tag Name">
-                           <input type="text" value="${u}" class="custom-link-url p-2 text-xs border rounded" placeholder="URL">`;
-            return d;
-        }
-
-        document.getElementById('addPhone').onclick = () => document.getElementById('phonesEditor').appendChild(createPhoneItem());
-        document.getElementById('addSocial').onclick = () => document.getElementById('socialsEditor').appendChild(createSocialItem());
-        document.getElementById('addCustomLink').onclick = () => document.getElementById('customLinksEditor').appendChild(createCustomLinkItem());
-
-        document.getElementById('saveEdit').onclick = async () => {
-            if (!authReady) return;
-            const loader = document.getElementById('loadingOverlay');
-            loader.style.display = 'flex';
-
-            try {
-                const updated = {
-                    ...CONTACT_DATA,
-                    name: document.getElementById('editName').value,
-                    organization: document.getElementById('editOrg').value,
-                    title: document.getElementById('editTitle').value,
-                    bio: document.getElementById('editBio').value,
-                    email: document.getElementById('editEmail').value,
-                    website: document.getElementById('editWebsite').value,
-                    location: document.getElementById('editLocation').value,
-                    adminPassword: document.getElementById('editPassword').value,
-                    image: tempProfileBase64,
-                    logo: tempLogoBase64,
-                    phones: Array.from(document.querySelectorAll('.phone-input')).map(i => i.value).filter(v => v.trim()),
-                    socialLinks: Array.from(document.querySelectorAll('#socialsEditor > div')).map(div => ({
-                        platform: div.querySelector('.social-platform').value,
-                        url: div.querySelector('.social-url').value
-                    })).filter(s => s.url.trim()),
-                    customLinks: Array.from(document.querySelectorAll('#customLinksEditor > div')).map(div => ({
-                        label: div.querySelector('.custom-link-label').value,
-                        url: div.querySelector('.custom-link-url').value
-                    })).filter(l => l.label.trim() && l.url.trim())
-                };
-
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'profiles', 'default');
-                await setDoc(docRef, updated);
-                window.toggleView('card');
-            } catch (err) {
-                console.error("Save Error:", err);
-            } finally {
-                loader.style.display = 'none';
-            }
-        };
-
-        document.getElementById('downloadButton').onclick = () => {
-            const element = document.getElementById('id-card-content');
-            html2canvas(element, { scale: 2, useCORS: true, backgroundColor: null }).then(canvas => {
-                const l = document.createElement('a');
-                l.download = `Sofonias_Genanaw_Card.png`;
-                l.href = canvas.toDataURL('image/png');
-                l.click();
-            });
-        };
-
-        document.getElementById('vcfButton').onclick = () => {
-            let v = `BEGIN:VCARD\nVERSION:3.0\nFN:${CONTACT_DATA.name}\nORG:${CONTACT_DATA.organization}\nTITLE:${CONTACT_DATA.title}\n`;
-            (CONTACT_DATA.phones || []).forEach(p => v += `TEL;TYPE=CELL:${p}\n`);
-            if (CONTACT_DATA.email) v += `EMAIL:${CONTACT_DATA.email}\n`;
-            if (CONTACT_DATA.website) v += `URL:${CONTACT_DATA.website}\n`;
-            v += `END:VCARD`;
-            const b = new Blob([v], { type: 'text/vcard' });
-            const l = document.createElement('a');
-            l.href = URL.createObjectURL(b);
-            l.download = `${CONTACT_DATA.name.replace(/\s+/g, '_')}.vcf`;
-            l.click();
-        };
-
-        // Initialize UI and Auth
         updateUI();
-        runAuth();
+        localStorage.setItem('contact_profile_data', JSON.stringify(CONTACT_DATA));
+        setupDataSync();
+    } else {
+        authReady = false;
+        status.textContent = "OFFLINE";
+        status.className = "status-offline";
+        tryLoadLocalProfileIfNeeded();
+    }
+});
+function setupDataSync() {
+    if (!authReady) return;
+    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'profiles', 'default');
+    onSnapshot(docRef, (snap) => {
+        if (snap.exists()) {
+            CONTACT_DATA = snap.data();
+            updateUI();
+            localStorage.setItem('contact_profile_data', JSON.stringify(CONTACT_DATA));
+        }
+    }, (err) => {
+        console.error("Firestore Sync Error:", err);
+        tryLoadLocalProfileIfNeeded();
+    });
+}
+function applyTheme(theme) {
+    theme = theme || {};
+    document.body.style.setProperty('--theme-primary', theme.primary || '#3b82f6');
+    document.body.style.setProperty('--theme-secondary', theme.secondary || '#1f2937');
+    document.body.style.setProperty('--theme-accent', theme.accent || '#eab308');
+    document.body.style.setProperty('--theme-bg', theme.background || '#ffffff');
+}
+function fontStyleToCSS(obj) {
+    if (!obj) return "";
+    let css = "";
+    if(obj.bold) css += "font-weight:bold;";
+    if(obj.italic) css += "font-style:italic;";
+    if(obj.underline) css += "text-decoration:underline;";
+    return css;
+}
+function updateUI() {
+    document.getElementById('display-name').textContent = CONTACT_DATA.name;
+    document.getElementById('display-name').style.color    = CONTACT_DATA.theme?.nameText    || "#1e293b";
+    document.getElementById('display-name').style.cssText += fontStyleToCSS(CONTACT_DATA.theme?.nameFontStyle);
+
+    document.getElementById('display-org').textContent = CONTACT_DATA.organization;
+    document.getElementById('display-org').style.color     = CONTACT_DATA.theme?.companyText || "#3b82f6";
+    document.getElementById('display-org').style.cssText += fontStyleToCSS(CONTACT_DATA.theme?.orgFontStyle);
+
+    document.getElementById('display-title').textContent = CONTACT_DATA.title;
+    document.getElementById('display-title').style.color   = CONTACT_DATA.theme?.titleText   || "#333333";
+    document.getElementById('display-title').style.cssText += fontStyleToCSS(CONTACT_DATA.theme?.titleFontStyle);
+
+    document.getElementById('display-bio').textContent = CONTACT_DATA.bio || "";
+    document.getElementById('display-bio').style.color     = CONTACT_DATA.theme?.bioText     || "#64748b";
+    document.getElementById('display-bio').style.cssText += fontStyleToCSS(CONTACT_DATA.theme?.bioFontStyle);
+
+    document.getElementById('profilePicture').src = CONTACT_DATA.image;
+    document.getElementById('companyLogo').src = CONTACT_DATA.logo || "";
+    document.getElementById('btn-website').href = CONTACT_DATA.website || '#';
+    document.getElementById('btn-location').href = CONTACT_DATA.location || '#';
+    applyTheme(CONTACT_DATA.theme);
+
+    const cLContainer = document.getElementById('custom-links-container');
+    cLContainer.innerHTML = (CONTACT_DATA.customLinks || []).map(link => `
+        <a href="${link.url}" target="_blank" class="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+            <span class="text-sm font-bold text-gray-800">${link.label}</span>
+            <i data-lucide="external-link" class="w-4 h-4 text-gray-400"></i>
+        </a>
+    `).join('');
+    const pContainer = document.getElementById('phone-buttons-container');
+    pContainer.innerHTML = (CONTACT_DATA.phones || []).map(num => `
+        <a href="tel:${num}" class="contact-btn flex items-center justify-center p-3 font-semibold rounded-lg"
+            style="background:${CONTACT_DATA.theme?.callBtnBg || '#22c55e'}; color:${CONTACT_DATA.theme?.callBtnText || '#ffffff'}">
+            <i data-lucide="phone" class="w-5 h-5 mr-2"></i>
+            Call: <span style="color:${CONTACT_DATA.theme?.callBtnText || '#ffffff'}">${num}</span>
+        </a>
+    `).join('');
+    const eContainer = document.getElementById('contact-buttons-container');
+    eContainer.innerHTML = CONTACT_DATA.email ? `<a href="mailto:${CONTACT_DATA.email}" class="contact-btn flex items-center justify-center p-3 font-semibold rounded-lg"><i data-lucide="mail" class="w-5 h-5 mr-2"></i>Send Email</a>` : "";
+    const sContainer = document.getElementById('social-container');
+    sContainer.innerHTML = (CONTACT_DATA.socialLinks || []).map(s => {
+        const p = PLATFORMS[s.platform];
+        if (!p) return "";
+        return `<a href="${s.url}" target="_blank" class="w-10 h-10 flex items-center justify-center rounded-full shadow-md ${p.class} transform hover:scale-110 transition-transform"><i class="fa-brands ${p.icon} text-xl"></i></a>`;
+    }).join('');
+    lucide.createIcons();
+
+    const downloadBtn = document.getElementById('downloadButton');
+    if (downloadBtn) {
+      downloadBtn.style.background   = CONTACT_DATA.theme?.downloadBtnBg   || "#2563eb";
+      downloadBtn.style.color        = CONTACT_DATA.theme?.downloadBtnText || "#ffffff";
+    }
+    const vcfBtn = document.getElementById('vcfButton');
+    if (vcfBtn) {
+      vcfBtn.style.background   = CONTACT_DATA.theme?.addToContactsBtnBg   || "#000000";
+      vcfBtn.style.color        = CONTACT_DATA.theme?.addToContactsBtnText || "#ffffff";
+    }
+    const qrBtn = document.getElementById('qrBtn');
+    if (qrBtn) {
+      qrBtn.style.background   = CONTACT_DATA.theme?.accent || "#eab308";
+      qrBtn.style.color        = "#333333";
+    }
+    const emailBtn = (
+      document.getElementById('contact-buttons-container').querySelector('a[href^="mailto:"]')
+    );
+    if (emailBtn) {
+      emailBtn.style.background = CONTACT_DATA.theme?.emailBtnBg   || "#dc2626";
+      emailBtn.style.color      = CONTACT_DATA.theme?.emailBtnText || "#ffffff";
+    }
+}
+function fileToBase64(file) {
+    return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target.result);
+        reader.readAsDataURL(file);
+    });
+}
+document.getElementById('uploadProfile').onchange = async (e) => {
+    if (e.target.files?.[0]) {
+        tempProfileBase64 = await fileToBase64(e.target.files[0]);
+        document.getElementById('editProfilePreview').src = tempProfileBase64;
+    }
+};
+document.getElementById('uploadLogo').onchange = async (e) => {
+    if (e.target.files?.[0]) {
+        tempLogoBase64 = await fileToBase64(e.target.files[0]);
+        document.getElementById('editLogoPreview').src = tempLogoBase64;
+    }
+};
+window.toggleView = (v) => {
+    ['cardView', 'loginView', 'editView'].forEach(id => document.getElementById(id).classList.add('hidden-view'));
+    const target = document.getElementById(v + 'View');
+    if (target) target.classList.remove('hidden-view');
+};
+document.getElementById('authBtn').onclick = () => window.toggleView('login');
+document.getElementById('doLogin').onclick = () => {
+    const pass = document.getElementById('loginPass').value;
+    if (pass === CONTACT_DATA.adminPassword) {
+        loadEditForm();
+        window.toggleView('edit');
+        document.getElementById('loginPass').value = "";
+    } else {
+        const msg = document.createElement('div');
+        msg.className = "text-red-500 text-xs text-center mt-2";
+        msg.innerText = "Incorrect Password";
+        document.getElementById('loginView').appendChild(msg);
+        setTimeout(() => msg.remove(), 2000);
+    }
+};
+function loadEditForm() {
+    document.getElementById('editName').value = CONTACT_DATA.name;
+    document.getElementById('editOrg').value = CONTACT_DATA.organization;
+    document.getElementById('editTitle').value = CONTACT_DATA.title;
+    document.getElementById('editBio').value = CONTACT_DATA.bio || "";
+    document.getElementById('editEmail').value = CONTACT_DATA.email;
+    document.getElementById('editWebsite').value = CONTACT_DATA.website;
+    document.getElementById('editLocation').value = CONTACT_DATA.location;
+    document.getElementById('editPassword').value = CONTACT_DATA.adminPassword;
+    document.getElementById('editProfilePreview').src = CONTACT_DATA.image;
+    document.getElementById('editLogoPreview').src = CONTACT_DATA.logo || "";
+    tempProfileBase64 = CONTACT_DATA.image;
+    tempLogoBase64 = CONTACT_DATA.logo;
+
+    document.getElementById('editThemePrimary').value = CONTACT_DATA.theme?.primary || "#3b82f6";
+    document.getElementById('editThemeSecondary').value = CONTACT_DATA.theme?.secondary || "#1f2937";
+    document.getElementById('editThemeAccent').value = CONTACT_DATA.theme?.accent || "#eab308";
+    document.getElementById('editThemeBackground').value = CONTACT_DATA.theme?.background || "#ffffff";
+    document.getElementById('editTextNameColor').value    = CONTACT_DATA.theme?.nameText    || "#1e293b";
+    document.getElementById('editTextCompanyColor').value = CONTACT_DATA.theme?.companyText || "#3b82f6";
+    document.getElementById('editTextTitleColor').value   = CONTACT_DATA.theme?.titleText   || "#333333";
+    document.getElementById('editTextBioColor').value     = CONTACT_DATA.theme?.bioText     || "#64748b";
+    document.getElementById('editDownloadBtnBg').value   = CONTACT_DATA.theme?.downloadBtnBg      || "#2563eb";
+    document.getElementById('editDownloadBtnText').value = CONTACT_DATA.theme?.downloadBtnText    || "#ffffff";
+    document.getElementById('editAddToContactsBtnBg').value   = CONTACT_DATA.theme?.addToContactsBtnBg   || "#000000";
+    document.getElementById('editAddToContactsBtnText').value = CONTACT_DATA.theme?.addToContactsBtnText || "#ffffff";
+    document.getElementById('editEmailBtnBg').value   = CONTACT_DATA.theme?.emailBtnBg   || "#dc2626";
+    document.getElementById('editEmailBtnText').value = CONTACT_DATA.theme?.emailBtnText || "#ffffff";
+    document.getElementById('editCallBtnBg').value   = CONTACT_DATA.theme?.callBtnBg   || "#22c55e";
+    document.getElementById('editCallBtnText').value = CONTACT_DATA.theme?.callBtnText || "#ffffff";
+    const styleDefaults = LATEST_BASE_DATA.theme;
+    function loadFont(idPrefix, styleObj) {
+        document.getElementById(idPrefix + "FontBold").checked      = !!(styleObj?.bold);
+        document.getElementById(idPrefix + "FontItalic").checked   = !!(styleObj?.italic);
+        document.getElementById(idPrefix + "FontUnderline").checked= !!(styleObj?.underline);
+    }
+    loadFont("name",  CONTACT_DATA.theme?.nameFontStyle ?? styleDefaults.nameFontStyle);
+    loadFont("org",   CONTACT_DATA.theme?.orgFontStyle  ?? styleDefaults.orgFontStyle);
+    loadFont("title", CONTACT_DATA.theme?.titleFontStyle?? styleDefaults.titleFontStyle);
+    loadFont("bio",   CONTACT_DATA.theme?.bioFontStyle  ?? styleDefaults.bioFontStyle);
+    const ph = document.getElementById('phonesEditor');
+    ph.innerHTML = "";
+    (CONTACT_DATA.phones || []).forEach(p => ph.appendChild(createPhoneItem(p)));
+    const soc = document.getElementById('socialsEditor');
+    soc.innerHTML = "";
+    (CONTACT_DATA.socialLinks || []).forEach(s => soc.appendChild(createSocialItem(s.platform, s.url)));
+    const cl = document.getElementById('customLinksEditor');
+    cl.innerHTML = "";
+    (CONTACT_DATA.customLinks || []).forEach(link => cl.appendChild(createCustomLinkItem(link.label, link.url)));
+    lucide.createIcons();
+}
+document.getElementById('saveEdit').onclick = async () => {
+    if (!authReady) return;
+    const loader = document.getElementById('loadingOverlay');
+    loader.style.display = 'flex';
+
+    function collectFont(idPrefix) {
+        return {
+          bold:      document.getElementById(idPrefix + "FontBold").checked,
+          italic:    document.getElementById(idPrefix + "FontItalic").checked,
+          underline: document.getElementById(idPrefix + "FontUnderline").checked
+        }
+    }
+
+    try {
+        const updated = {
+            ...CONTACT_DATA,
+            name: document.getElementById('editName').value,
+            organization: document.getElementById('editOrg').value,
+            title: document.getElementById('editTitle').value,
+            bio: document.getElementById('editBio').value,
+            email: document.getElementById('editEmail').value,
+            website: document.getElementById('editWebsite').value,
+            location: document.getElementById('editLocation').value,
+            adminPassword: document.getElementById('editPassword').value,
+            image: tempProfileBase64,
+            logo: tempLogoBase64,
+            phones: Array.from(document.querySelectorAll('.phone-input')).map(i => i.value).filter(v => v.trim()),
+            socialLinks: Array.from(document.querySelectorAll('#socialsEditor > div')).map(div => ({
+                platform: div.querySelector('.social-platform').value,
+                url: div.querySelector('.social-url').value
+            })).filter(s => s.url.trim()),
+            customLinks: Array.from(document.querySelectorAll('#customLinksEditor > div')).map(div => ({
+                label: div.querySelector('.custom-link-label').value,
+                url: div.querySelector('.custom-link-url').value
+            })).filter(l => l.label.trim() && l.url.trim()),
+            theme: {
+                primary: document.getElementById('editThemePrimary').value,
+                secondary: document.getElementById('editThemeSecondary').value,
+                accent: document.getElementById('editThemeAccent').value,
+                background: document.getElementById('editThemeBackground').value,
+                nameText: document.getElementById('editTextNameColor').value,
+                companyText: document.getElementById('editTextCompanyColor').value,
+                titleText: document.getElementById('editTextTitleColor').value,
+                bioText: document.getElementById('editTextBioColor').value,
+                downloadBtnBg: document.getElementById('editDownloadBtnBg').value,
+                downloadBtnText: document.getElementById('editDownloadBtnText').value,
+                addToContactsBtnBg: document.getElementById('editAddToContactsBtnBg').value,
+                addToContactsBtnText: document.getElementById('editAddToContactsBtnText').value,
+                emailBtnBg: document.getElementById('editEmailBtnBg').value,
+                emailBtnText: document.getElementById('editEmailBtnText').value,
+                callBtnBg: document.getElementById('editCallBtnBg').value,
+                callBtnText: document.getElementById('editCallBtnText').value,
+                nameFontStyle: collectFont("name"),
+                orgFontStyle:  collectFont("org"),
+                titleFontStyle:collectFont("title"),
+                bioFontStyle:  collectFont("bio")
+            }
+        };
+        const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'profiles', 'default');
+        await setDoc(docRef, updated);
+        localStorage.setItem('contact_profile_data', JSON.stringify(updated));
+        window.toggleView('card');
+    } catch (err) {
+        console.error("Save Error:", err);
+    } finally {
+        loader.style.display = 'none';
+    }
+};
+function createPhoneItem(v = "") {
+    const d = document.createElement('div');
+    d.className = "flex gap-2";
+    d.innerHTML = `<input type="text" value="${v}" class="phone-input flex-1 p-2 border rounded text-sm"><button onclick="this.parentElement.remove()" class="text-red-500 px-2 font-bold">×</button>`;
+    return d;
+}
+function createSocialItem(p = "linkedin", u = "") {
+    const d = document.createElement('div');
+    d.className = "flex flex-col gap-1 p-2 bg-gray-50 rounded border relative";
+    let opts = Object.keys(PLATFORMS).map(k => `<option value="${k}" ${k===p?'selected':''}>${k}</option>`).join('');
+    d.innerHTML = `<button onclick="this.parentElement.remove()" class="absolute top-1 right-1 text-red-500 font-bold">×</button>
+                   <select class="social-platform p-1 text-xs bg-white border">${opts}</select>
+                   <input type="text" value="${u}" class="social-url p-1 text-xs border" placeholder="URL">`;
+    return d;
+}
+function createCustomLinkItem(l = "", u = "") {
+    const d = document.createElement('div');
+    d.className = "flex flex-col gap-1 p-3 bg-gray-50 rounded-xl border relative";
+    d.innerHTML = `<button onclick="this.parentElement.remove()" class="absolute top-2 right-2 text-red-500 font-bold">×</button>
+                   <input type="text" value="${l}" class="custom-link-label p-2 text-xs border rounded mb-1" placeholder="Link Tag Name">
+                   <input type="text" value="${u}" class="custom-link-url p-2 text-xs border rounded" placeholder="URL">`;
+    return d;
+}
+document.getElementById('addPhone').onclick = () => document.getElementById('phonesEditor').appendChild(createPhoneItem());
+document.getElementById('addSocial').onclick = () => document.getElementById('socialsEditor').appendChild(createSocialItem());
+document.getElementById('addCustomLink').onclick = () => document.getElementById('customLinksEditor').appendChild(createCustomLinkItem());
+document.getElementById('downloadButton').onclick = () => {
+    const element = document.getElementById('id-card-content');
+    html2canvas(element, { scale: 2, useCORS: true, backgroundColor: null }).then(canvas => {
+        const l = document.createElement('a');
+        l.download = `Sofonias_Genanaw_Card.png`;
+        l.href = canvas.toDataURL('image/png');
+        l.click();
+    });
+};
+document.getElementById('vcfButton').onclick = () => {
+    let v = `BEGIN:VCARD\nVERSION:3.0\nFN:${CONTACT_DATA.name}\nORG:${CONTACT_DATA.organization}\nTITLE:${CONTACT_DATA.title}\n`;
+    (CONTACT_DATA.phones || []).forEach(p => v += `TEL;TYPE=CELL:${p}\n`);
+    if (CONTACT_DATA.email) v += `EMAIL:${CONTACT_DATA.email}\n`;
+    if (CONTACT_DATA.website) v += `URL:${CONTACT_DATA.website}\n`;
+    v += `END:VCARD`;
+    const b = new Blob([v], { type: 'text/vcard' });
+    const l = document.createElement('a');
+    l.href = URL.createObjectURL(b);
+    l.download = `${CONTACT_DATA.name.replace(/\s+/g, '_')}.vcf`;
+    l.click();
+};
+document.getElementById('qrBtn').onclick = function() {
+    const qrDiv = document.getElementById('qrCodeBox');
+    qrDiv.innerHTML = "";
+    const url = CONTACT_DATA.website || window.location.href;
+    const qrCode = new QRCode(qrDiv, {
+      text: url,
+      width: 200,
+      height: 200
+    });
+    setTimeout(()=> {
+      const img = qrDiv.querySelector("img");
+      if (img) {
+        const downBtn = document.createElement('a');
+        downBtn.textContent = "Download This QR";
+        downBtn.className = "block mt-4 bg-blue-600 text-white py-2 px-4 rounded-xl text-center shadow-lg";
+        downBtn.href = img.src;
+        downBtn.download = "business_card_qr.png";
+        qrDiv.appendChild(downBtn);
+      }
+    }, 300);
+};
+//==== OFFLINE/LOCAL STORAGE section ====
+function tryLoadLocalProfileIfNeeded() {
+    if (!navigator.onLine) {
+        const cached = localStorage.getItem('contact_profile_data');
+        if (cached) {
+            CONTACT_DATA = JSON.parse(cached);
+            updateUI();
+            const status = document.getElementById('syncStatus');
+            status.textContent = "SYNC: OFFLINE (LOCAL DATA)";
+            status.className = "status-offline";
+        }
+    }
+}
+window.addEventListener('offline', tryLoadLocalProfileIfNeeded);
+window.addEventListener('online', () => location.reload());
+if (!navigator.onLine) {
+    tryLoadLocalProfileIfNeeded();
+}
+updateUI();
+runAuth();
     </script>
 </body>
 </html>
