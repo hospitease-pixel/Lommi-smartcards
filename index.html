@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sofonias Genanaw - Digital Business Card</title>
+    <title>Lomi Legacy - Digital Business Card</title>
     
     <!-- Open Graph for Social Sharing -->
-    <meta property="og:title" content="Sofonias Genanaw - Digital Business Card" />
+    <meta property="og:title" content="Lomi Legacy- Digital Business Card" />
     <meta property="og:description" content="Founder & CEO of Lomi Legacy. One Tap.Done" />
     <meta property="og:image" content="https://i.ibb.co/zTR9JFVx/Lomi-smart-card-20260324-153530-0000.png" /> 
     <meta property="og:type" content="website" />
@@ -52,11 +52,11 @@
     <div id="loadingOverlay">
         <div class="flex flex-col items-center gap-4">
             <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-            <p class="text-white text-sm font-medium">Syncing profile...</p>
+            <p class="text-white text-sm font-medium">Syncing ...</p>
         </div>
     </div>
 
-    <div id="syncStatus" class="status-offline">SYNC: OFFLINE</div>
+    <div id="syncStatus" class="status-offline">OFFLINE</div>
 
     <!-- Admin Access Trigger -->
     <button id="authBtn" class="fixed top-4 right-4 bg-gray-800/80 backdrop-blur-sm text-white p-2 rounded-full shadow-lg z-50 hover:bg-gray-700">
@@ -72,7 +72,7 @@
             <h2 class="text-2xl font-bold text-gray-800">Admin Login</h2>
         </div>
         <div class="space-y-4">
-            <input type="password" id="loginPass" placeholder="Enter Admin Password" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none">
+            <input type="password" id="loginPass" placeholder="Enter Password" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none">
             <button id="doLogin" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold shadow-lg">Access Dashboard</button>
             <button onclick="window.toggleView('card')" class="w-full text-gray-500 text-sm">Cancel</button>
         </div>
@@ -164,7 +164,7 @@
         </div>
 
         <button id="saveEdit" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold mt-8 shadow-xl hover:bg-blue-700 transition-all">
-            Publish Changes Globally
+            Publish
         </button>
     </div>
 
@@ -244,14 +244,14 @@
 
         const LATEST_BASE_DATA = {
             adminPassword: "Admin",
-            name: "Sofonias Genanaw",
-            organization: "Lomi Legacy", 
+            name: "Lomi Legacy",
+            organization: "Lomi Smart Cards", 
             title: "Founder & CEO",
             bio: "One Tap.Done",
             image: "https://i.ibb.co/ym404nTr/No-BG-Lomi.png",
             logo: "https://i.ibb.co/zTR9JFVx/Lomi-smart-card-20260324-153530-0000.png",
             phones: ["0920508303"],
-            email: "sofi122112@gmail.com",
+            email: "lomilegacy@gmail.com",
             website: "https://sofonias-g.vercel.app",
             location: "https://maps.app.goo.gl/7fNW5PpJraVmqeCd7",
             socialLinks: [
@@ -297,7 +297,7 @@
             const status = document.getElementById('syncStatus');
             if (user) {
                 authReady = true;
-                status.textContent = "SYNC: CONNECTED";
+                status.textContent = "CONNECTED";
                 status.className = "status-online";
                 
                 const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'profiles', 'default');
@@ -310,7 +310,7 @@
                 setupDataSync();
             } else {
                 authReady = false;
-                status.textContent = "SYNC: OFFLINE";
+                status.textContent = "OFFLINE";
                 status.className = "status-offline";
             }
         });
