@@ -3,21 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sofonias Genanaw - Digital Business Card</title>
-    <meta property="og:title" content="Sofonias Genanaw - Digital Business Card" />
+    <title>Lomi Smart Cards</title>
+    <meta name="theme-color" content="#111827" />
+    <meta property="og:title" content="Lomi  - Digital Business Card" />
     <meta property="og:description" content="Founder & CEO of Lomi Legacy. One Tap.Done" />
     <meta property="og:image" content="https://i.ibb.co/zTR9JFVx/Lomi-smart-card-20260324-153530-0000.png" /> 
     <meta property="og:type" content="website" />
-
+    <link rel="dns-prefetch" href="//cdn.tailwindcss.com" />
+    <link rel="dns-prefetch" href="//www.gstatic.com" />
+    <link rel="dns-prefetch" href="//unpkg.com" />
+    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com" />
+    <link rel="dns-prefetch" href="//i.ibb.co" />
+    <link rel="preconnect" href="https://www.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://i.ibb.co" crossorigin />
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-        .contact-btn { transition: all 0.2s; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
-        .contact-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        .contact-btn { transition: all 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.08); }
+        .contact-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 12px rgba(0,0,0,0.1); }
+        .wave-background { position: relative; overflow: hidden; z-index: 1; }
         .graph-pattern-background { background-image: radial-gradient(#e5e7eb 1px, transparent 1px); background-size: 20px 20px; }
         .static-watermark { opacity: 0.00001; width: 1%; height: 1%; filter: grayscale(1%); }
         .hidden-view { display: none !important; }
@@ -35,7 +39,21 @@
         .animate-order-pop {
          animation: orderAttention 1.3s infinite cubic-bezier(.22,1,.36,1);
         }
-        /* Modal styling for the portfolio image */
+        #orderNfcBtn {
+            text-shadow:
+                1px 0 0 rgba(255,255,255,0.98),
+                -1px 0 0 rgba(255,255,255,0.98),
+                0 1px 0 rgba(255,255,255,0.98),
+                0 -1px 0 rgba(255,255,255,0.98),
+                1px 1px 0 rgba(255,255,255,0.98),
+                -1px 1px 0 rgba(255,255,255,0.98),
+                1px -1px 0 rgba(255,255,255,0.98),
+                -1px -1px 0 rgba(255,255,255,0.98);
+        }
+        #orderNfcBtn svg {
+            filter: drop-shadow(0 0 1px rgba(255,255,255,0.98));
+        }
+        
         #portfolioModal {
             background: rgba(0,0,0,0.6);
         }
@@ -54,45 +72,44 @@
         <i data-lucide="settings" class="w-5 h-5"></i>
     </button>
 
-    <!-- Main Card View -->
+    
     <div id="cardView" class="w-full flex flex-col items-center">
         <div id="id-card-content" class="graph-pattern-background max-w-sm w-full mx-auto p-4 md:p-6 rounded-3xl border-2 border-gray-200 shadow-2xl relative overflow-hidden mb-6 bg-white">
             <div id="waveBg" class="wave-background absolute top-0 left-0 right-0 h-64 -mt-2 -mx-1 rounded-t-[1.5rem] bg-white">
                 <div class="absolute top-0 left-0 w-full h-full flex justify-center items-center p-4">
-                    <img id="companyLogo" src="" alt="Logo" class="w-full h-full object-contain">
+                    <img id="companyLogo" src="" alt="Logo" class="w-full h-full object-contain" loading="eager" decoding="async" fetchpriority="high">
                 </div>
             </div>
             <div class="absolute inset-0 z-0 pointer-events-none flex justify-center items-center" style="top: 25%;">
-                <img src="https://i.ibb.co/ym404nTr/No-BG-Lomi.png" alt="Watermark" class="static-watermark object-contain">
+                <img src="https://i.ibb.co/ym404nTr/No-BG-Lomi.png" alt="Watermark" class="static-watermark object-contain" loading="lazy" decoding="async">
             </div>
             <div class="relative z-10 pt-40"> 
                 <div class="text-center mb-6"> 
                     <div class="relative w-32 h-32 mx-auto rounded-full border-4 border-white shadow-xl overflow-hidden bg-white">
-                        <img id="profilePicture" src="" alt="Profile" class="w-full h-full object-cover">
+                        <img id="profilePicture" src="" alt="Profile" class="w-full h-full object-cover" loading="eager" decoding="async" fetchpriority="high">
                     </div>
                     <h1 id="display-name" class="text-xl font-extrabold mt-4">...</h1>
-                    <div class="flex justify-center items-center gap-2 mt-1">
-  <h1 id="display-name" class="text-xl font-extrabold mt-4">...</h1>
-<div class="flex justify-center items-center gap-2 mt-1">
-  <span id="display-org" class="text-base font-semibold text-gray-700">...</span>
-  <span class="mx-1 text-gray-400 text-base">|</span>
-  <span id="display-title" class="text-base font-medium text-gray-500">...</span>
-</div>
-<p id="display-bio" class="text-sm font-medium italic mt-2 px-4"></p>
-                <div class="mt-4 border-t border-b py-4">
-                    <div id="social-container" class="flex flex-wrap justify-center gap-3"></div>
-                    <div id="custom-links-container" class="flex flex-wrap justify-center gap-2 mt-3"></div>
+                    <div id="companyTitleRow" class="mt-1 flex items-center justify-center gap-2 flex-wrap text-center">
+                        <p id="display-org" class="text-lg font-bold">...</p>
+                        <span id="display-org-title-separator" class="text-sm font-bold text-gray-400" aria-hidden="true">•</span>
+                        <p id="display-title" class="text-md font-semibold">...</p>
+                    </div>
+                    <p id="display-bio" class="text-sm font-medium italic mt-0.5 px-4"></p>
                 </div>
-                <!-- Contact Buttons (Phones and Emails) -->
-                <div id="phone-buttons-container" class="space-y-3 mt-6"></div>
+                <div class="mt-0.5 border-t border-gray-50 pt-1 pb-1">
+                    <div id="social-container" class="flex flex-wrap justify-center gap-1"></div>
+                    <div id="custom-links-container" class="flex flex-wrap justify-center gap-2 mt-1"></div>
+                </div>
+                
+                <div id="phone-buttons-container" class="space-y-3 mt-3"></div>
                 <div class="mt-6 flex gap-2" id="main-btn-row">
                     <a href="#" target="_blank" id="btn-website" class="flex-1 flex items-center justify-center p-3 rounded-lg text-sm font-bold"><i data-lucide="globe" class="w-4 h-4 mr-2"></i>Website</a>
                     <button id="btn-portfolio" style="display:none" class="flex-1 flex items-center justify-center p-3 rounded-lg text-sm font-bold bg-gray-200 text-gray-800"><i data-lucide="folder" class="w-4 h-4 mr-2"></i>Portfolio</button>
                     <a href="#" target="_blank" id="btn-location" class="flex-1 flex items-center justify-center p-3 rounded-lg text-sm font-bold"><i data-lucide="map-pin" class="w-4 h-4 mr-2"></i>Location</a>
                 </div>
                 <div class="mt-8 space-y-3">
-                    <button id="downloadButton" class="w-full flex items-center justify-center p-4 text-white font-bold rounded-xl shadow-lg">Download Card Image</button>
-                    <button id="vcfButton" class="w-full flex items-center justify-center p-4 text-white font-bold rounded-xl shadow-lg">Add to Contacts</button>
+                    <button id="downloadButton" class="w-full flex items-center justify-center px-4 py-3 text-sm text-white font-semibold rounded-lg shadow-md">Download Card Image</button>
+                    <button id="vcfButton" class="w-full flex items-center justify-center px-4 py-3 text-sm text-white font-semibold rounded-lg shadow-md">Add to Contacts</button>
                     <button id="qrOpenBtn" class="w-full flex items-center justify-center p-3 text-gray-800 font-bold rounded-xl">View QR Code</button>
                     <a id="orderNfcBtn" href="https://wa.me/251920508303?text=Hello%20Lomi,%20I'm%20interested%20on%20your%20NFC%20card%20and%20I%20would%20like%20to%20order%20mine.%20would%20you%20please%20let%20me%20know%20the%20details%20with%20the%20price" target="_blank" class="animate-order-pop w-full flex items-center justify-center p-3 text-gray-800 font-bold rounded-xl">
                         <i data-lucide="shopping-cart" class="w-4 h-4 mr-2"></i>Order your NFC card here
@@ -102,17 +119,17 @@
         </div>
     </div>
 
-    <!-- Portfolio Modal -->
+   
     <div id="portfolioModal" class="hidden-view fixed inset-0 z-[120] flex items-center justify-center" style="background:rgba(0,0,0,.7);">
         <div class="absolute inset-0" onclick="window.toggleView('card')"></div>
         <div class="relative bg-white rounded-lg max-w-lg w-full flex flex-col items-center p-6 z-10">
             <span class="absolute top-2 right-3 cursor-pointer text-gray-400 hover:text-black text-2xl font-bold" onclick="window.toggleView('card')">&times;</span>
-            <img id="portfolioImageView" src="" alt="Portfolio" class="max-h-96 object-contain my-6 rounded-lg border shadow-lg" />
+            <img id="portfolioImageView" src="" alt="Portfolio" class="max-h-96 object-contain my-6 rounded-lg border shadow-lg" loading="lazy" decoding="async" />
             <div class="w-full flex justify-center text-xs text-gray-500 mt-2 mb-0">Portfolio preview</div>
         </div>
     </div>
 
-    <!-- Login View -->
+   
     <div id="loginView" class="hidden-view max-w-sm w-full bg-white p-8 rounded-3xl shadow-2xl mt-20">
         <div class="flex flex-col items-center mb-6">
             <h2 class="text-2xl font-bold text-gray-800">Admin Login</h2>
@@ -124,7 +141,7 @@
         </div>
     </div>
 
-    <!-- QR Modal -->
+   
     <div id="qrModal" class="hidden-view fixed inset-0 z-[100] flex items-center justify-center p-6">
         <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="window.toggleView('card')"></div>
         <div class="bg-white p-8 rounded-3xl shadow-2xl relative z-10 max-w-xs w-full text-center">
@@ -134,18 +151,34 @@
         </div>
     </div>
 
-    <!-- Dashboard Editor -->
+    
     <div id="editView" class="hidden-view max-w-4xl w-full bg-white p-8 rounded-3xl shadow-2xl my-8 overflow-y-auto max-h-[90vh]">
          <div class="flex justify-between items-center mb-6 border-b pb-4">
             <h2 class="text-2xl font-bold text-gray-800">Dashboard</h2>
             <button onclick="window.toggleView('card')" class="text-gray-400"><i data-lucide="x"></i></button>
         </div>
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-             <!-- Left Column -->
+             
              <div class="space-y-6">
                  <div>
                      <h3 class="font-bold text-blue-600 border-b pb-1 mb-3 uppercase text-xs">Profile Information</h3>
                      <div class="space-y-3">
+                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                             <div class="p-3 border rounded-xl bg-gray-50">
+                                 <label class="block text-[10px] font-bold text-gray-400 uppercase mb-2">Profile Picture</label>
+                                 <img id="editProfilePreview" src="" alt="Profile preview" class="w-24 h-24 mx-auto rounded-full object-cover bg-gray-200 border">
+                                 <input type="file" accept="image/*" id="editProfileImage" class="w-full mt-3 p-1 border rounded bg-white" />
+                                 <p class="mt-2 text-[10px] text-gray-400 text-center">Opens your phone gallery or files.</p>
+                             </div>
+                             <div class="p-3 border rounded-xl bg-gray-50">
+                                 <label class="block text-[10px] font-bold text-gray-400 uppercase mb-2">Company Logo</label>
+                                 <div class="w-full h-24 mx-auto rounded-2xl bg-white border flex items-center justify-center p-3">
+                                     <img id="editLogoPreview" src="" alt="Logo preview" class="w-full h-full object-contain">
+                                 </div>
+                                 <input type="file" accept="image/*" id="editLogoImage" class="w-full mt-3 p-1 border rounded bg-white" />
+                                 <p class="mt-2 text-[10px] text-gray-400 text-center">Choose a logo from gallery or files.</p>
+                             </div>
+                         </div>
                          <label class="block text-[10px] font-bold text-gray-400 uppercase">Name</label>
                          <input type="text" id="editName" class="w-full p-2 border rounded">
                          <label class="block text-[10px] font-bold text-gray-400 uppercase">Title</label>
@@ -158,6 +191,14 @@
                          <input type="text" id="editWebsite" class="w-full p-2 border rounded">
                          <label class="block text-[10px] font-bold text-gray-400 uppercase">Location URL</label>
                          <input type="text" id="editLocation" class="w-full p-2 border rounded">
+                         <div>
+                             <div class="flex items-center justify-between gap-3">
+                                 <label class="block text-[10px] font-bold text-gray-400 uppercase">QR Code Link</label>
+                                 <button type="button" id="clearQrLinkBtn" class="text-[10px] font-bold uppercase text-blue-600">Clear</button>
+                             </div>
+                             <input type="text" id="editQrLink" class="w-full p-2 border rounded mt-1" placeholder="https://your-link.com">
+                             <p class="mt-2 text-[10px] text-gray-400">Leave empty to make the QR code use this card page automatically.</p>
+                         </div>
                          <label class="block text-[10px] font-bold text-gray-400 uppercase">Admin Password</label>
                          <input type="password" id="editPassword" class="w-full p-2 border rounded mb-1">
                          <input type="password" id="editPasswordConfirm" class="w-full p-2 border rounded" placeholder="Confirm Password">
@@ -165,7 +206,7 @@
                          <input type="file" accept="image/jpeg,image/png" id="editPortfolio" class="w-full p-1 border rounded" />
                      </div>
                  </div>
-                 <!-- Contact Management -->
+                 
                  <div class="space-y-6">
                     <div>
                         <h3 class="font-bold text-blue-600 border-b pb-1 mb-3 uppercase text-xs">Phone Numbers</h3>
@@ -185,7 +226,7 @@
                     </div>
                  </div>
              </div>
-             <!-- Right Column -->
+           
              <div class="space-y-6">
                  <div>
                     <h3 class="font-bold text-blue-600 border-b pb-1 mb-3 uppercase text-xs">Social Links</h3>
@@ -219,7 +260,10 @@
                             <label class="block text-[10px] font-bold text-gray-400 uppercase">Bio</label>
                             <input type="color" id="colorBio" class="w-full h-10 p-1 border rounded">
                         </div>
-                    
+                        <div>
+                            <label class="block text-[10px] font-bold text-gray-400 uppercase">Wave Border</label>
+                            <input type="color" id="colorWave" class="w-full h-10 p-1 border rounded">
+                        </div>
                         <div>
                             <label class="block text-[10px] font-bold text-gray-400 uppercase">Main Btn</label>
                             <input type="color" id="colorMainBtn" class="w-full h-10 p-1 border rounded">
@@ -240,11 +284,7 @@
         <button id="resetProfileBtn" class="w-full bg-red-600 text-white py-3 rounded-xl font-bold mt-4 shadow-lg">Reset All to Default</button>
     </div>
 
-    <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js';
-        import { getAuth, signInAnonymously, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
-        import { getFirestore, doc, setDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
-
+    <script>
         const firebaseConfig = {
             apiKey: "AIzaSyAXWv2I0vDHwmhQVSe9ummW4NFkbPSgWvM",
             authDomain: "lomi-smart-card.firebaseapp.com",
@@ -256,9 +296,6 @@
             measurementId: "G-YY97G59MNF"
         };
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'lomi-card-v1';
 
         const DEFAULT_DATA = {
@@ -273,13 +310,14 @@
             emails: ["sofi122112@gmail.com"],
             website: "https://sofonias-g.vercel.app",
             location: "https://maps.app.goo.gl/7fNW5PpJraVmqeCd7",
+            qrLink: "",
             socialLinks: [
                 { platform: 'instagram', url: 'https://instagram.com' },
                 { platform: 'facebook', url: 'https://facebook.com' },
                 { platform: 'telegram', url: 'https://t.me' }
             ],
             customLinks: [],
-            // New: portfolio field, empty by default
+           
             portfolio: "",
             colors: {
                 cardBg: "#ffffff",
@@ -292,59 +330,228 @@
 
         let CONTACT_DATA = { ...DEFAULT_DATA };
         let isCloudSynced = false;
+        let firebaseClient = null;
+        let syncUnsubscribe = null;
+        const loadedScripts = {};
 
         const PLATFORMS = {
-            instagram: { icon: 'fa-instagram', label: 'Instagram' },
-            facebook: { icon: 'fa-facebook', label: 'Facebook' },
-            telegram: { icon: 'fa-telegram', label: 'Telegram' },
-            whatsapp: { icon: 'fa-whatsapp', label: 'WhatsApp' },
-            tiktok: { icon: 'fa-tiktok', label: 'TikTok' },
-            linkedin: { icon: 'fa-linkedin', label: 'LinkedIn' },
-            link: { icon: 'fa-link', label: 'Other' }
+            instagram: { icon: 'instagram', label: 'Instagram' },
+            facebook: { icon: 'facebook', label: 'Facebook' },
+            telegram: { icon: 'send', label: 'Telegram' },
+            whatsapp: { icon: 'message-circle', label: 'WhatsApp' },
+            tiktok: { icon: 'music-2', label: 'TikTok' },
+            linkedin: { icon: 'linkedin', label: 'LinkedIn' },
+            link: { icon: 'link', label: 'Other' }
         };
 
-        async function initAuth() {
-            try { await signInAnonymously(auth); } catch (err) { loadLocalData(); }
+        function getSocialIconMarkup(platform) {
+            const icons = {
+                instagram: `
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" aria-hidden="true">
+                        <rect x="3.5" y="3.5" width="17" height="17" rx="5"></rect>
+                        <circle cx="12" cy="12" r="3.2"></circle>
+                        <circle cx="17.2" cy="6.8" r="0.9" fill="currentColor" stroke="none"></circle>
+                    </svg>`,
+                facebook: `
+                    <svg viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5" aria-hidden="true">
+                        <path d="M13.4 20v-6h2l.3-2.5h-2.3V9.9c0-.8.3-1.4 1.5-1.4H16V6.2c-.4-.1-1.1-.2-2-.2-2.4 0-4 1.4-4 4.1v1.4H8v2.5h2V20h3.4Z"></path>
+                    </svg>`,
+                telegram: `
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" aria-hidden="true">
+                        <path d="M21 3 10 14"></path>
+                        <path d="m21 3-7 18-4.5-6.5L3 10l18-7Z"></path>
+                    </svg>`,
+                whatsapp: `
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" aria-hidden="true">
+                        <path d="m7 19 1.1-3.2A7 7 0 1 1 12 19a7 7 0 0 1-2.7-.5L7 19Z"></path>
+                        <path d="M10.4 9.7c.2-.3.6-.3.8-.1l.9 1c.2.2.2.5.1.8l-.5.6c.5 1 1.2 1.7 2.2 2.2l.6-.5c.3-.1.6-.1.8.1l1 .9c.2.2.2.6-.1.8-.7.6-1.7.8-2.5.5-2.4-.8-4.3-2.7-5.1-5.1-.3-.8-.1-1.8.5-2.5Z"></path>
+                    </svg>`,
+                tiktok: `
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" aria-hidden="true">
+                        <path d="M14 4v8.6a3.4 3.4 0 1 1-2.8-3.3"></path>
+                        <path d="M14 6.3c.8 1.2 2.1 2 3.6 2.2"></path>
+                    </svg>`,
+                linkedin: `
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" aria-hidden="true">
+                        <path d="M6.8 10.2V18"></path>
+                        <path d="M6.8 6.9h.01"></path>
+                        <path d="M11.3 10.2V18"></path>
+                        <path d="M11.3 13.6c0-2 1.2-3.4 3.1-3.4 1.8 0 2.9 1.2 2.9 3.6V18"></path>
+                    </svg>`,
+                link: `
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" aria-hidden="true">
+                        <path d="M10 13a5 5 0 0 0 7.1 0l1.4-1.4a5 5 0 1 0-7.1-7.1L10 5"></path>
+                        <path d="M14 11a5 5 0 0 0-7.1 0l-1.4 1.4a5 5 0 1 0 7.1 7.1L14 19"></path>
+                    </svg>`
+            };
+
+            return icons[platform] || icons.link;
         }
 
-        onAuthStateChanged(auth, (user) => {
-            const statusEl = document.getElementById('syncStatus');
-            if (user) {
-                isCloudSynced = true;
-                statusEl.textContent = "SYNC: CONNECTED";
-                statusEl.className = "status-online";
-                startSync();
+        function scheduleTask(task) {
+            if ('requestIdleCallback' in window) {
+                window.requestIdleCallback(() => task(), { timeout: 1500 });
             } else {
-                statusEl.textContent = "SYNC: OFFLINE";
-                statusEl.className = "status-offline";
+                window.setTimeout(task, 32);
             }
-        });
+        }
+
+        function setSyncStatus(text, isOnline) {
+            const statusEl = document.getElementById('syncStatus');
+            statusEl.textContent = text;
+            statusEl.className = isOnline ? "status-online" : "status-offline";
+        }
+
+        function normalizeContactData(data = {}) {
+            const merged = {
+                ...DEFAULT_DATA,
+                ...data,
+                colors: {
+                    ...DEFAULT_DATA.colors,
+                    ...(data.colors || {})
+                }
+            };
+            merged.customLinks = Array.isArray(merged.customLinks) ? merged.customLinks : [];
+            merged.socialLinks = Array.isArray(merged.socialLinks) ? merged.socialLinks : [];
+            merged.phones = Array.isArray(merged.phones) ? merged.phones : [];
+            merged.emails = Array.isArray(merged.emails) ? merged.emails : [];
+            merged.portfolio = typeof merged.portfolio === 'string' ? merged.portfolio : "";
+            merged.qrLink = typeof merged.qrLink === 'string' ? merged.qrLink : "";
+            return merged;
+        }
+
+        function getEffectiveQrTarget() {
+            const customQrLink = (CONTACT_DATA.qrLink || "").trim();
+            if (customQrLink) return customQrLink;
+            return window.location.protocol === 'file:' ? (CONTACT_DATA.website || "") : window.location.href.split('#')[0];
+        }
+
+        function cacheContactData(data) {
+            localStorage.setItem('cached_profile', JSON.stringify(data));
+        }
+
+        function loadExternalScript(src) {
+            if (loadedScripts[src]) return loadedScripts[src];
+            loadedScripts[src] = new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = src;
+                script.async = true;
+                script.defer = true;
+                script.onload = () => resolve(window);
+                script.onerror = () => reject(new Error(`Failed to load ${src}`));
+                document.head.appendChild(script);
+            });
+            return loadedScripts[src];
+        }
+
+        async function ensureIconsLoaded() {
+            if (window.lucide) return window.lucide;
+            await loadExternalScript('https://unpkg.com/lucide@latest');
+            return window.lucide;
+        }
+
+        async function refreshIcons() {
+            try {
+                const lucideLib = await ensureIconsLoaded();
+                if (lucideLib && typeof lucideLib.createIcons === 'function') {
+                    lucideLib.createIcons();
+                }
+            } catch (err) {}
+        }
+
+        async function ensureHtml2CanvasLoaded() {
+            if (window.html2canvas) return window.html2canvas;
+            await loadExternalScript('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js');
+            return window.html2canvas;
+        }
+
+        async function ensureQRCodeLoaded() {
+            if (window.QRCode) return window.QRCode;
+            await loadExternalScript('https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js');
+            return window.QRCode;
+        }
+
+        async function initCloudClient() {
+            if (firebaseClient) return firebaseClient;
+            const [appModule, authModule, firestoreModule] = await Promise.all([
+                import('https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js'),
+                import('https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js'),
+                import('https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js')
+            ]);
+
+            const app = appModule.initializeApp(firebaseConfig);
+            firebaseClient = {
+                auth: authModule.getAuth(app),
+                db: firestoreModule.getFirestore(app),
+                signInAnonymously: authModule.signInAnonymously,
+                onAuthStateChanged: authModule.onAuthStateChanged,
+                doc: firestoreModule.doc,
+                setDoc: firestoreModule.setDoc,
+                onSnapshot: firestoreModule.onSnapshot
+            };
+
+            return firebaseClient;
+        }
+
+        async function saveProfileToCloud(data) {
+            if (!isCloudSynced || !firebaseClient) return;
+            const docRef = firebaseClient.doc(firebaseClient.db, 'artifacts', appId, 'public', 'data', 'profiles', 'main');
+            setSyncStatus("SYNC: SAVING", true);
+
+            try {
+                await firebaseClient.setDoc(docRef, data);
+                setSyncStatus("SYNC: CONNECTED", true);
+            } catch (err) {
+                setSyncStatus("SYNC: OFFLINE", false);
+                alert("Your changes were saved only on this device because Firebase could not save them right now.");
+            }
+        }
+
+        async function initAuth() {
+            try {
+                setSyncStatus("SYNC: LOADING", false);
+                const client = await initCloudClient();
+                client.onAuthStateChanged(client.auth, (user) => {
+                    if (user) {
+                        isCloudSynced = true;
+                        setSyncStatus("SYNC: CONNECTED", true);
+                        startSync();
+                    } else if (!isCloudSynced) {
+                        setSyncStatus("SYNC: OFFLINE", false);
+                    }
+                });
+                await client.signInAnonymously(client.auth);
+            } catch (err) {
+                isCloudSynced = false;
+                setSyncStatus("SYNC: OFFLINE", false);
+            }
+        }
 
         function startSync() {
-            const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'profiles', 'main');
-            onSnapshot(docRef, (snap) => {
+            if (!firebaseClient) return;
+            if (syncUnsubscribe) syncUnsubscribe();
+            const docRef = firebaseClient.doc(firebaseClient.db, 'artifacts', appId, 'public', 'data', 'profiles', 'main');
+            syncUnsubscribe = firebaseClient.onSnapshot(docRef, (snap) => {
                 if (snap.exists()) {
-                    CONTACT_DATA = snap.data();
-                    if (!Array.isArray(CONTACT_DATA.customLinks)) CONTACT_DATA.customLinks = [];
-                    if (!Array.isArray(CONTACT_DATA.socialLinks)) CONTACT_DATA.socialLinks = [];
-                    if (!Array.isArray(CONTACT_DATA.phones)) CONTACT_DATA.phones = [];
-                    if (!Array.isArray(CONTACT_DATA.emails)) CONTACT_DATA.emails = [];
-                    if (typeof CONTACT_DATA.portfolio === "undefined") CONTACT_DATA.portfolio = "";
-                    localStorage.setItem('cached_profile', JSON.stringify(CONTACT_DATA));
+                    CONTACT_DATA = normalizeContactData(snap.data());
+                    cacheContactData(CONTACT_DATA);
                     renderUI();
-                } else { setDoc(docRef, DEFAULT_DATA); }
-            }, (err) => loadLocalData());
+                } else {
+                    firebaseClient.setDoc(docRef, DEFAULT_DATA);
+                }
+            }, () => setSyncStatus("SYNC: OFFLINE", false));
         }
 
         function loadLocalData() {
             const cached = localStorage.getItem('cached_profile');
             if (cached) {
-                CONTACT_DATA = JSON.parse(cached);
-                if (!Array.isArray(CONTACT_DATA.customLinks)) CONTACT_DATA.customLinks = [];
-                if (!Array.isArray(CONTACT_DATA.socialLinks)) CONTACT_DATA.socialLinks = [];
-                if (!Array.isArray(CONTACT_DATA.phones)) CONTACT_DATA.phones = [];
-                if (!Array.isArray(CONTACT_DATA.emails)) CONTACT_DATA.emails = [];
-                if (typeof CONTACT_DATA.portfolio === "undefined") CONTACT_DATA.portfolio = "";
+                try {
+                    CONTACT_DATA = normalizeContactData(JSON.parse(cached));
+                } catch (err) {
+                    CONTACT_DATA = normalizeContactData(DEFAULT_DATA);
+                }
+            } else {
+                CONTACT_DATA = normalizeContactData(DEFAULT_DATA);
             }
             renderUI();
         }
@@ -353,19 +560,23 @@
             const colors = CONTACT_DATA.colors || DEFAULT_DATA.colors;
             document.getElementById('id-card-content').style.backgroundColor = colors.cardBg || "#ffffff";
             document.getElementById('waveBg').style.backgroundColor = colors.coverBg || "#ffffff";
-            document.getElementById('waveBg').style.borderColor = colors.wave || "#3b82f6";
             document.getElementById('display-name').textContent = CONTACT_DATA.name;
             document.getElementById('display-name').style.color = colors.name;
             document.getElementById('display-org').textContent = CONTACT_DATA.organization;
             document.getElementById('display-org').style.color = colors.org;
             document.getElementById('display-title').textContent = CONTACT_DATA.title;
             document.getElementById('display-title').style.color = colors.title;
+            const hasOrg = !!(CONTACT_DATA.organization && CONTACT_DATA.organization.trim());
+            const hasTitle = !!(CONTACT_DATA.title && CONTACT_DATA.title.trim());
+            document.getElementById('display-org').style.display = hasOrg ? "" : "none";
+            document.getElementById('display-title').style.display = hasTitle ? "" : "none";
+            document.getElementById('display-org-title-separator').style.display = hasOrg && hasTitle ? "" : "none";
             document.getElementById('display-bio').textContent = CONTACT_DATA.bio;
             document.getElementById('display-bio').style.color = colors.bio;
             document.getElementById('profilePicture').src = CONTACT_DATA.image;
             document.getElementById('companyLogo').src = CONTACT_DATA.logo;
             const utilStyle = colors.utilBtn === '#f3f4f6' ? { bg: '#f3f4f6', text: '#1f2937' } : { bg: colors.utilBtn, text: 'white' };
-            // Website, Portfolio, Location styling + hrefs
+            
             document.getElementById('btn-website').style.backgroundColor = utilStyle.bg;
             document.getElementById('btn-website').style.color = utilStyle.text;
             document.getElementById('btn-website').href = CONTACT_DATA.website;
@@ -373,7 +584,7 @@
             document.getElementById('btn-location').style.color = utilStyle.text;
             document.getElementById('btn-location').href = CONTACT_DATA.location;
 
-            // Portfolio button logic
+         
             const portfolioBtn = document.getElementById('btn-portfolio');
             if (CONTACT_DATA.portfolio && CONTACT_DATA.portfolio.startsWith('data:image/')) {
                 portfolioBtn.style.display = "";
@@ -386,46 +597,55 @@
             document.getElementById('downloadButton').style.backgroundColor = colors.mainBtn;
             document.getElementById('vcfButton').style.backgroundColor = colors.contactBtn;
             
-            // Phones/Emails
+            
             const phC = document.getElementById('phone-buttons-container');
             let contactHtml = "";
             (CONTACT_DATA.phones || []).forEach(num => {
                 contactHtml += `
-                    <a href="tel:${num}" class="contact-btn flex items-center justify-center p-3 text-white font-semibold rounded-lg" style="background-color: ${colors.mainBtn}">
-                        <i data-lucide="phone" class="w-5 h-5 mr-2"></i>Call: ${num}
+                    <a href="tel:${num}" class="contact-btn flex items-center justify-center px-4 py-2.5 text-sm text-white font-medium rounded-md" style="background-color: ${colors.mainBtn}">
+                        <i data-lucide="phone" class="w-4 h-4 mr-2"></i>Call: ${num}
                     </a>`;
             });
             (CONTACT_DATA.emails || []).forEach(email => {
                 contactHtml += `
-                    <a href="mailto:${email}" class="contact-btn flex items-center justify-center p-3 text-white font-semibold rounded-lg" style="background-color: ${colors.mainBtn}">
-                        <i data-lucide="mail" class="w-5 h-5 mr-2"></i>Email: ${email}
+                    <a href="mailto:${email}" class="contact-btn flex items-center justify-center px-4 py-2.5 text-sm text-white font-medium rounded-md" style="background-color: ${colors.mainBtn}">
+                        <i data-lucide="mail" class="w-4 h-4 mr-2"></i>Email: ${email}
                     </a>`;
             });
             phC.innerHTML = contactHtml;
 
-            // Socials
+            
             const socC = document.getElementById('social-container');
             socC.innerHTML = (CONTACT_DATA.socialLinks || []).map(s => `
-                <a href="${s.url}" target="_blank" class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-200 text-gray-700 hover:scale-110 transition-transform">
-                    <i class="fa-brands ${PLATFORMS[s.platform]?.icon || 'fa-link'} text-xl"></i>
+                <a href="${s.url}" target="_blank" rel="noopener noreferrer" aria-label="${PLATFORMS[s.platform]?.label || 'Link'}" class="w-11 h-11 flex items-center justify-center rounded-full bg-gray-200 text-gray-700 shadow-sm hover:scale-110 transition-transform">
+                    ${getSocialIconMarkup(s.platform)}
                 </a>`).join('');
             
-            // Custom links
+            
             document.getElementById('custom-links-container').innerHTML = (CONTACT_DATA.customLinks || []).filter(l => l.url && l.url.trim() !== "").map(link => `
-                <a href="${link.url}" target="_blank"
+                <a href="${link.url}" target="_blank" rel="noopener noreferrer"
                 class="contact-btn flex items-center px-4 py-2 mb-1 rounded-lg text-xs font-bold shadow"
                 style="background:${colors.utilBtn};color:${colors.utilBtn === '#f3f4f6' ? '#1f2937':'white'};border:1px solid #d1d5db;">
-                  <i class="fa fa-link mr-2 text-xs"></i> ${link.tag || "Link"}
+                  <i data-lucide="link" class="w-4 h-4 mr-2"></i> ${link.tag || "Link"}
                 </a>`).join('');
 
-            lucide.createIcons();
+            refreshIcons();
         }
 
         window.toggleView = (view) => {
+            const viewMap = {
+                card: 'cardView',
+                login: 'loginView',
+                edit: 'editView',
+                qrModal: 'qrModal',
+                portfolio: 'portfolioModal'
+            };
             ['cardView', 'loginView', 'editView', 'qrModal', 'portfolioModal'].forEach(id =>
                 document.getElementById(id).classList.add('hidden-view'));
-            if (view === 'portfolio') document.getElementById('portfolioModal').classList.remove('hidden-view');
-            else document.getElementById(view + 'View' || view).classList.remove('hidden-view');
+            const targetId = viewMap[view] || view;
+            const target = document.getElementById(targetId);
+            if (target) target.classList.remove('hidden-view');
+            refreshIcons();
         };
 
         function createPhoneRow(value = "") {
@@ -437,7 +657,7 @@
             `;
             div.querySelector('.remove-btn').onclick = () => div.remove();
             document.getElementById('editPhonesList').appendChild(div);
-            lucide.createIcons();
+            refreshIcons();
         }
 
         function createEmailRow(value = "") {
@@ -449,7 +669,7 @@
             `;
             div.querySelector('.remove-btn').onclick = () => div.remove();
             document.getElementById('editEmailsList').appendChild(div);
-            lucide.createIcons();
+            refreshIcons();
         }
 
         function createCustomLinkRow(tag = "", url = "") {
@@ -462,7 +682,7 @@
             `;
             div.querySelector('.remove-btn').onclick = () => div.remove();
             document.getElementById('editCustomLinksList').appendChild(div);
-            lucide.createIcons();
+            refreshIcons();
         }
 
         function createSocialRow(platform = "instagram", url = "") {
@@ -479,13 +699,52 @@
             `;
             div.querySelector('.remove-btn').onclick = () => div.remove();
             document.getElementById('editSocialsList').appendChild(div);
-            lucide.createIcons();
+            refreshIcons();
         }
 
         document.getElementById('addPhoneBtn').onclick = () => createPhoneRow();
         document.getElementById('addEmailBtn').onclick = () => createEmailRow();
         document.getElementById('addSocialBtn').onclick = () => createSocialRow();
         document.getElementById('addCustomLinkBtn').onclick = () => createCustomLinkRow();
+        document.getElementById('clearQrLinkBtn').onclick = () => {
+            document.getElementById('editQrLink').value = "";
+        };
+
+        const editProfileImage = document.getElementById('editProfileImage');
+        const editLogoImage = document.getElementById('editLogoImage');
+        const editProfilePreview = document.getElementById('editProfilePreview');
+        const editLogoPreview = document.getElementById('editLogoPreview');
+
+        let profileImagePreviewBase64 = "";
+        let logoImagePreviewBase64 = "";
+
+        function bindImageInput(inputEl, previewEl, assignValue, emptyClassName = "") {
+            inputEl.onchange = (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                if (!/^image\//i.test(file.type)) {
+                    alert("Please select an image file.");
+                    inputEl.value = "";
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    const result = ev.target.result;
+                    previewEl.src = result;
+                    if (emptyClassName) previewEl.classList.remove(emptyClassName);
+                    assignValue(result);
+                };
+                reader.readAsDataURL(file);
+            };
+        }
+
+        bindImageInput(editProfileImage, editProfilePreview, (value) => {
+            profileImagePreviewBase64 = value;
+        });
+        bindImageInput(editLogoImage, editLogoPreview, (value) => {
+            logoImagePreviewBase64 = value;
+        });
 
         // Portfolio Upload Field
         const editPortfolio = document.getElementById('editPortfolio');
@@ -502,19 +761,27 @@
             reader.readAsDataURL(file);
         };
 
-        // Portfolio modal open handler
+        
         document.getElementById('btn-portfolio').onclick = () => {
             const portfolioImageView = document.getElementById('portfolioImageView');
             portfolioImageView.src = CONTACT_DATA.portfolio || "";
             window.toggleView('portfolio');
         };
 
-        document.getElementById('qrOpenBtn').onclick = () => {
+        document.getElementById('qrOpenBtn').onclick = async () => {
             const qrTarget = document.getElementById('qrCodeTarget');
-            qrTarget.innerHTML = "";
-            const profilePicUrl = CONTACT_DATA.image || "";
-            new QRCode(qrTarget, { text: profilePicUrl, width: 200, height: 200 });
             window.toggleView('qrModal');
+            qrTarget.innerHTML = `<div class="py-12 text-sm font-semibold text-gray-500">Loading QR code...</div>`;
+            let QRCodeLib;
+            try {
+                QRCodeLib = await ensureQRCodeLoaded();
+            } catch (err) {
+                qrTarget.innerHTML = `<div class="py-12 text-sm font-semibold text-red-500">QR code could not load.</div>`;
+                return;
+            }
+            qrTarget.innerHTML = "";
+            const qrTargetUrl = getEffectiveQrTarget();
+            new QRCodeLib(qrTarget, { text: qrTargetUrl, width: 200, height: 200 });
         };
 
         document.getElementById('authBtn').onclick = () => window.toggleView('login');
@@ -526,8 +793,15 @@
                 document.getElementById('editBio').value = CONTACT_DATA.bio;
                 document.getElementById('editWebsite').value = CONTACT_DATA.website;
                 document.getElementById('editLocation').value = CONTACT_DATA.location;
+                document.getElementById('editQrLink').value = CONTACT_DATA.qrLink || "";
                 document.getElementById('editPassword').value = CONTACT_DATA.adminPassword;
                 document.getElementById('editPasswordConfirm').value = CONTACT_DATA.adminPassword;
+                editProfilePreview.src = CONTACT_DATA.image || "";
+                editLogoPreview.src = CONTACT_DATA.logo || "";
+                editProfileImage.value = "";
+                editLogoImage.value = "";
+                profileImagePreviewBase64 = CONTACT_DATA.image || "";
+                logoImagePreviewBase64 = CONTACT_DATA.logo || "";
                 const c = CONTACT_DATA.colors || DEFAULT_DATA.colors;
                 document.getElementById('colorCardBg').value = c.cardBg || "#ffffff";
                 document.getElementById('colorCoverBg').value = c.coverBg || "#ffffff";
@@ -535,6 +809,7 @@
                 document.getElementById('colorOrg').value = c.org;
                 document.getElementById('colorTitle').value = c.title;
                 document.getElementById('colorBio').value = c.bio;
+                document.getElementById('colorWave').value = c.wave;
                 document.getElementById('colorMainBtn').value = c.mainBtn;
                 document.getElementById('colorContactBtn').value = c.contactBtn;
                 document.getElementById('colorUtilBtn').value = c.utilBtn;
@@ -546,7 +821,7 @@
                 (CONTACT_DATA.customLinks || []).forEach(l => createCustomLinkRow(l.tag, l.url));
                 document.getElementById('editSocialsList').innerHTML = "";
                 (CONTACT_DATA.socialLinks || []).forEach(s => createSocialRow(s.platform, s.url));
-                // Portfolio - no preview - only for saving
+                
                 portfolioPreviewBase64 = CONTACT_DATA.portfolio || "";
                 window.toggleView('edit');
             } else { alert("Incorrect password"); }
@@ -559,6 +834,11 @@
                 alert("Passwords do not match. Please confirm your new password.");
                 return;
             }
+            const saveButton = document.getElementById('saveEdit');
+            const originalSaveButtonText = saveButton.textContent;
+            saveButton.disabled = true;
+            saveButton.textContent = "Saving...";
+            try {
             const phones = Array.from(document.querySelectorAll('.phone-input')).map(i => i.value).filter(v => v.trim() !== "");
             const emails = Array.from(document.querySelectorAll('.email-input')).map(i => i.value).filter(v => v.trim() !== "");
             const customLinks = Array.from(document.querySelectorAll('#editCustomLinksList > div')).map(row => {
@@ -577,8 +857,10 @@
                     url: url ? url.value : ''
                 };
             }).filter(s => s.url && s.url.trim() !== "");
-            // Save portfolio image, only if a new one is selected, otherwise keep the old one
+            
             const portfolioImgFinal = portfolioPreviewBase64 || CONTACT_DATA.portfolio || "";
+            const profileImgFinal = profileImagePreviewBase64 || CONTACT_DATA.image || "";
+            const logoImgFinal = logoImagePreviewBase64 || CONTACT_DATA.logo || "";
 
             const updated = {
                 ...CONTACT_DATA,
@@ -586,8 +868,11 @@
                 title: document.getElementById('editTitle').value,
                 organization: document.getElementById('editOrg').value,
                 bio: document.getElementById('editBio').value,
+                image: profileImgFinal,
+                logo: logoImgFinal,
                 website: document.getElementById('editWebsite').value,
                 location: document.getElementById('editLocation').value,
+                qrLink: document.getElementById('editQrLink').value.trim(),
                 adminPassword: password1,
                 phones,
                 emails,
@@ -601,33 +886,45 @@
                     org: document.getElementById('colorOrg').value,
                     title: document.getElementById('colorTitle').value,
                     bio: document.getElementById('colorBio').value,
+                    wave: document.getElementById('colorWave').value,
                     mainBtn: document.getElementById('colorMainBtn').value,
                     contactBtn: document.getElementById('colorContactBtn').value,
                     utilBtn: document.getElementById('colorUtilBtn').value
                 }
             };
-            if (isCloudSynced) {
-                await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'profiles', 'main'), updated);
-            } else {
-                CONTACT_DATA = updated;
-                localStorage.setItem('cached_profile', JSON.stringify(updated));
-                renderUI();
-            }
-            portfolioPreviewBase64 = "";
+            const localData = normalizeContactData(updated);
+            CONTACT_DATA = localData;
+            cacheContactData(CONTACT_DATA);
+            renderUI();
+            profileImagePreviewBase64 = CONTACT_DATA.image || "";
+            logoImagePreviewBase64 = CONTACT_DATA.logo || "";
+            portfolioPreviewBase64 = CONTACT_DATA.portfolio || "";
+            saveButton.textContent = "Saved";
             window.toggleView('card');
+
+            if (isCloudSynced && firebaseClient) {
+                void saveProfileToCloud(localData);
+            }
+            } finally {
+                saveButton.disabled = false;
+                saveButton.textContent = originalSaveButtonText;
+            }
         };
 
-        document.getElementById('resetProfileBtn').onclick = async () => {
+            document.getElementById('resetProfileBtn').onclick = async () => {
             if (!confirm("Are you sure you want to reset your profile to the original defaults? This cannot be undone.")) return;
-            if (isCloudSynced) {
-                await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'profiles', 'main'), DEFAULT_DATA);
-            } else {
-                CONTACT_DATA = { ...DEFAULT_DATA };
-                localStorage.setItem('cached_profile', JSON.stringify(DEFAULT_DATA));
-                renderUI();
-            }
-            portfolioPreviewBase64 = "";
+            const resetData = normalizeContactData(DEFAULT_DATA);
+            CONTACT_DATA = resetData;
+            cacheContactData(CONTACT_DATA);
+            renderUI();
+            profileImagePreviewBase64 = CONTACT_DATA.image || DEFAULT_DATA.image || "";
+            logoImagePreviewBase64 = CONTACT_DATA.logo || DEFAULT_DATA.logo || "";
+            portfolioPreviewBase64 = CONTACT_DATA.portfolio || "";
             window.toggleView('card');
+
+            if (isCloudSynced && firebaseClient) {
+                void saveProfileToCloud(resetData);
+            }
         };
 
         document.getElementById('vcfButton').onclick = () => {
@@ -643,7 +940,20 @@
             link.click();
         };
 
-        document.getElementById('downloadButton').onclick = () => {
+        document.getElementById('downloadButton').onclick = async () => {
+            const downloadButton = document.getElementById('downloadButton');
+            const originalButtonText = downloadButton.innerHTML;
+            downloadButton.disabled = true;
+            downloadButton.innerHTML = 'Preparing download...';
+            let html2canvasLib;
+            try {
+                html2canvasLib = await ensureHtml2CanvasLoaded();
+            } catch (err) {
+                downloadButton.disabled = false;
+                downloadButton.innerHTML = originalButtonText;
+                alert("The image export tool could not load. Please try again.");
+                return;
+            }
             const devMsg = document.createElement('div');
             devMsg.id = "dev-watermark";
             devMsg.style.cssText = `
@@ -659,7 +969,7 @@
             cardEl.style.position = "relative";
             cardEl.appendChild(devMsg);
 
-            html2canvas(cardEl, { useCORS: true, scale: 2 }).then(canvas => {
+            html2canvasLib(cardEl, { useCORS: true, scale: 2 }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = "business-card.png";
                 link.href = canvas.toDataURL();
@@ -672,10 +982,15 @@
                     msg.innerHTML = `developed by Lomi <a href="tel:+251920508303" class="block underline">+251920508303</a>`;
                     orderBtn.parentNode.replaceChild(msg, orderBtn);
                 }
+            }).finally(() => {
+                downloadButton.disabled = false;
+                downloadButton.innerHTML = originalButtonText;
             });
         };
 
-        initAuth();
+        loadLocalData();
+        scheduleTask(refreshIcons);
+        scheduleTask(initAuth);
     </script>
 </body>
 </html>
