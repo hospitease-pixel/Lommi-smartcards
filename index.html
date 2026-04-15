@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lomi Smart Cards</title>
     <meta name="theme-color" content="#111827" />
-    <meta property="og:title" content="Lomi  - Digital Business Card" />
-    <meta property="og:description" content="Founder & CEO of Lomi Legacy. One Tap.Done" />
-    <meta property="og:image" content="https://i.ibb.co/zTR9JFVx/Lomi-smart-card-20260324-153530-0000.png" /> 
+    <meta property="og:title" content="Lidya Urgessa - Digital Business Card" />
+    <meta property="og:description" content="CEO and Founder at Green Aroma Coffee. One Tap. Done." />
+    <meta property="og:image" content="https://i.ibb.co/5x2sy4T2/Screenshot-20260206-105351-Face-App.jpg" /> 
     <meta property="og:type" content="website" />
     <link rel="dns-prefetch" href="//cdn.tailwindcss.com" />
     <link rel="dns-prefetch" href="//www.gstatic.com" />
@@ -53,10 +54,10 @@
         #orderNfcBtn svg {
             filter: drop-shadow(0 0 1px rgba(255,255,255,0.98));
         }
-        
         #portfolioModal {
             background: rgba(0,0,0,0.6);
         }
+        #saveEdit:disabled { opacity: 0.7; cursor: not-allowed; }
     </style>
 </head>
 <body class="min-h-screen bg-gray-900 flex flex-col items-center py-8 px-4">
@@ -298,26 +299,29 @@
 
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'lomi-card-v1';
 
+        const PROFILE_KEY = "lidya-urgessa-v1"; // Change this whenever you switch profiles
+
         const DEFAULT_DATA = {
+            _profileKey: PROFILE_KEY,
             adminPassword: "Admin",
-            name: "Sofonias Genanaw",
-            organization: "Lomi Legacy", 
-            title: "Founder & CEO",
-            bio: "One Tap.Done",
-            image: "https://i.ibb.co/zTR9JFVx/Lomi-smart-card-20260324-153530-0000.png",
-            logo: "https://i.ibb.co/zTR9JFVx/Lomi-smart-card-20260324-153530-0000.png",
-            phones: ["0920508303"],
-            emails: ["sofi122112@gmail.com"],
-            website: "https://sofonias-g.vercel.app",
-            location: "https://maps.app.goo.gl/7fNW5PpJraVmqeCd7",
+            name: "Lidya Urgessa",
+            organization: "Green Aroma Coffee",
+            title: "CEO and Founder",
+            bio: "Green Aroma Coffee delivers premium Ethiopian coffee with rich aroma and natural flavor, offering both classic and flavored blends crafted for every coffee lover.",
+            image: "https://i.ibb.co/5x2sy4T2/Screenshot-20260206-105351-Face-App.jpg",
+            logo: "https://i.ibb.co/MyxhpGYf/6008323535736522554.jpg",
+            phones: ["0938658130"],
+            emails: [],
+            website: "",
+            location: "",
             qrLink: "",
             socialLinks: [
-                { platform: 'instagram', url: 'https://instagram.com' },
-                { platform: 'facebook', url: 'https://facebook.com' },
-                { platform: 'telegram', url: 'https://t.me' }
+                { platform: 'whatsapp', url: 'https://wa.me/251938658130' },
+                { platform: 'telegram', url: 'https://t.me/+251938658160' },
+                { platform: 'linkedin', url: 'https://www.linkedin.com/in/lidya-urgessa-a44b4636a?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app' },
+                { platform: 'facebook', url: 'https://www.facebook.com/lidya.leyu' }
             ],
             customLinks: [],
-           
             portfolio: "",
             colors: {
                 cardBg: "#ffffff",
@@ -473,24 +477,48 @@
 
         async function initCloudClient() {
             if (firebaseClient) return firebaseClient;
-            const [appModule, authModule, firestoreModule] = await Promise.all([
+            const [appModule, authModule, firestoreModule, storageModule] = await Promise.all([
                 import('https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js'),
                 import('https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js'),
-                import('https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js')
+                import('https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js'),
+                import('https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js')
             ]);
 
             const app = appModule.initializeApp(firebaseConfig);
             firebaseClient = {
                 auth: authModule.getAuth(app),
                 db: firestoreModule.getFirestore(app),
+                storage: storageModule.getStorage(app),
                 signInAnonymously: authModule.signInAnonymously,
                 onAuthStateChanged: authModule.onAuthStateChanged,
                 doc: firestoreModule.doc,
                 setDoc: firestoreModule.setDoc,
-                onSnapshot: firestoreModule.onSnapshot
+                onSnapshot: firestoreModule.onSnapshot,
+                // Storage helpers
+                ref: storageModule.ref,
+                uploadString: storageModule.uploadString,
+                getDownloadURL: storageModule.getDownloadURL
             };
 
             return firebaseClient;
+        }
+
+        /**
+         * FIX: Uploads a base64 image to Firebase Storage and returns the public download URL.
+         * This prevents storing large base64 blobs in Firestore (which has a 1MB document limit).
+         * @param {string} base64DataUrl   – data:image/... string
+         * @param {string} path            – Storage path, e.g. "profiles/main/avatar"
+         * @returns {Promise<string>}      – HTTPS download URL
+         */
+        async function uploadImageToStorage(base64DataUrl, path) {
+            if (!firebaseClient) throw new Error("Firebase not initialised");
+            // Only upload actual base64 blobs; plain HTTPS URLs don't need uploading
+            if (!base64DataUrl || !base64DataUrl.startsWith('data:')) return base64DataUrl;
+
+            const storageRef = firebaseClient.ref(firebaseClient.storage, path);
+            // uploadString with 'data_url' accepts the full data:mime;base64,... string
+            await firebaseClient.uploadString(storageRef, base64DataUrl, 'data_url');
+            return await firebaseClient.getDownloadURL(storageRef);
         }
 
         async function saveProfileToCloud(data) {
@@ -499,11 +527,37 @@
             setSyncStatus("SYNC: SAVING", true);
 
             try {
-                await firebaseClient.setDoc(docRef, data);
+                // FIX: Upload any base64 images to Storage before writing to Firestore.
+                // Firestore documents are capped at 1 MB — a single photo can easily exceed that.
+                const saveData = { ...data };
+
+                if (saveData.image && saveData.image.startsWith('data:')) {
+                    setSyncStatus("SYNC: UPLOADING IMAGE…", true);
+                    saveData.image = await uploadImageToStorage(saveData.image, `profiles/main/avatar`);
+                }
+                if (saveData.logo && saveData.logo.startsWith('data:')) {
+                    setSyncStatus("SYNC: UPLOADING LOGO…", true);
+                    saveData.logo = await uploadImageToStorage(saveData.logo, `profiles/main/logo`);
+                }
+                if (saveData.portfolio && saveData.portfolio.startsWith('data:')) {
+                    setSyncStatus("SYNC: UPLOADING PORTFOLIO…", true);
+                    saveData.portfolio = await uploadImageToStorage(saveData.portfolio, `profiles/main/portfolio`);
+                }
+
+                await firebaseClient.setDoc(docRef, saveData);
+
+                // FIX: After successful upload, update CONTACT_DATA & cache with the real URLs
+                // so the card always uses the hosted URL (not the local base64 blob)
+                CONTACT_DATA.image = saveData.image;
+                CONTACT_DATA.logo = saveData.logo;
+                CONTACT_DATA.portfolio = saveData.portfolio;
+                cacheContactData(CONTACT_DATA);
+
                 setSyncStatus("SYNC: CONNECTED", true);
             } catch (err) {
+                console.error("Cloud save failed:", err);
                 setSyncStatus("SYNC: OFFLINE", false);
-                alert("Your changes were saved only on this device because Firebase could not save them right now.");
+                alert("Your changes were saved only on this device.\n\nCloud save error: " + (err.message || err));
             }
         }
 
@@ -542,17 +596,26 @@
             }, () => setSyncStatus("SYNC: OFFLINE", false));
         }
 
-        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyC1LJ2wrM_Qmx9E_2xPmzybRXVPwJCnx3s",
-  authDomain: "mylomismartcard1.firebaseapp.com",
-  databaseURL: "https://mylomismartcard1-default-rtdb.firebaseio.com",
-  projectId: "mylomismartcard1",
-  storageBucket: "mylomismartcard1.firebasestorage.app",
-  messagingSenderId: "193639141242",
-  appId: "1:193639141242:web:08dd9d02e5a320d0b7d0c3",
-  measurementId: "G-6SVM8N7TK3"
-};
+        function loadLocalData() {
+            const cached = localStorage.getItem('cached_profile');
+            if (cached) {
+                try {
+                    const parsed = JSON.parse(cached);
+                    // If the cached profile belongs to a different person, clear it
+                    if (parsed._profileKey !== PROFILE_KEY) {
+                        localStorage.removeItem('cached_profile');
+                        CONTACT_DATA = normalizeContactData(DEFAULT_DATA);
+                    } else {
+                        CONTACT_DATA = normalizeContactData(parsed);
+                    }
+                } catch (err) {
+                    CONTACT_DATA = normalizeContactData(DEFAULT_DATA);
+                }
+            } else {
+                CONTACT_DATA = normalizeContactData(DEFAULT_DATA);
+            }
+            renderUI();
+        }
 
         function renderUI() {
             const colors = CONTACT_DATA.colors || DEFAULT_DATA.colors;
@@ -582,9 +645,8 @@ const firebaseConfig = {
             document.getElementById('btn-location').style.color = utilStyle.text;
             document.getElementById('btn-location').href = CONTACT_DATA.location;
 
-         
             const portfolioBtn = document.getElementById('btn-portfolio');
-            if (CONTACT_DATA.portfolio && CONTACT_DATA.portfolio.startsWith('data:image/')) {
+            if (CONTACT_DATA.portfolio && CONTACT_DATA.portfolio.trim() !== "") {
                 portfolioBtn.style.display = "";
                 portfolioBtn.style.backgroundColor = utilStyle.bg;
                 portfolioBtn.style.color = utilStyle.text;
@@ -594,7 +656,6 @@ const firebaseConfig = {
 
             document.getElementById('downloadButton').style.backgroundColor = colors.mainBtn;
             document.getElementById('vcfButton').style.backgroundColor = colors.contactBtn;
-            
             
             const phC = document.getElementById('phone-buttons-container');
             let contactHtml = "";
@@ -612,13 +673,11 @@ const firebaseConfig = {
             });
             phC.innerHTML = contactHtml;
 
-            
             const socC = document.getElementById('social-container');
             socC.innerHTML = (CONTACT_DATA.socialLinks || []).map(s => `
                 <a href="${s.url}" target="_blank" rel="noopener noreferrer" aria-label="${PLATFORMS[s.platform]?.label || 'Link'}" class="w-11 h-11 flex items-center justify-center rounded-full bg-gray-200 text-gray-700 shadow-sm hover:scale-110 transition-transform">
                     ${getSocialIconMarkup(s.platform)}
                 </a>`).join('');
-            
             
             document.getElementById('custom-links-container').innerHTML = (CONTACT_DATA.customLinks || []).filter(l => l.url && l.url.trim() !== "").map(link => `
                 <a href="${link.url}" target="_blank" rel="noopener noreferrer"
@@ -716,7 +775,7 @@ const firebaseConfig = {
         let profileImagePreviewBase64 = "";
         let logoImagePreviewBase64 = "";
 
-        function bindImageInput(inputEl, previewEl, assignValue, emptyClassName = "") {
+        function bindImageInput(inputEl, previewEl, assignValue) {
             inputEl.onchange = (e) => {
                 const file = e.target.files[0];
                 if (!file) return;
@@ -725,12 +784,10 @@ const firebaseConfig = {
                     inputEl.value = "";
                     return;
                 }
-
                 const reader = new FileReader();
                 reader.onload = (ev) => {
                     const result = ev.target.result;
                     previewEl.src = result;
-                    if (emptyClassName) previewEl.classList.remove(emptyClassName);
                     assignValue(result);
                 };
                 reader.readAsDataURL(file);
@@ -744,9 +801,8 @@ const firebaseConfig = {
             logoImagePreviewBase64 = value;
         });
 
-        // Portfolio Upload Field
         const editPortfolio = document.getElementById('editPortfolio');
-        let portfolioPreviewBase64 = ""; // used so we keep this for saving
+        let portfolioPreviewBase64 = "";
 
         editPortfolio.onchange = (e) => {
             const file = e.target.files[0];
@@ -759,7 +815,6 @@ const firebaseConfig = {
             reader.readAsDataURL(file);
         };
 
-        
         document.getElementById('btn-portfolio').onclick = () => {
             const portfolioImageView = document.getElementById('portfolioImageView');
             portfolioImageView.src = CONTACT_DATA.portfolio || "";
@@ -798,8 +853,10 @@ const firebaseConfig = {
                 editLogoPreview.src = CONTACT_DATA.logo || "";
                 editProfileImage.value = "";
                 editLogoImage.value = "";
-                profileImagePreviewBase64 = CONTACT_DATA.image || "";
-                logoImagePreviewBase64 = CONTACT_DATA.logo || "";
+                // FIX: Reset base64 previews – images start as current URLs (not base64)
+                profileImagePreviewBase64 = "";
+                logoImagePreviewBase64 = "";
+                portfolioPreviewBase64 = "";
                 const c = CONTACT_DATA.colors || DEFAULT_DATA.colors;
                 document.getElementById('colorCardBg').value = c.cardBg || "#ffffff";
                 document.getElementById('colorCoverBg').value = c.coverBg || "#ffffff";
@@ -819,8 +876,6 @@ const firebaseConfig = {
                 (CONTACT_DATA.customLinks || []).forEach(l => createCustomLinkRow(l.tag, l.url));
                 document.getElementById('editSocialsList').innerHTML = "";
                 (CONTACT_DATA.socialLinks || []).forEach(s => createSocialRow(s.platform, s.url));
-                
-                portfolioPreviewBase64 = CONTACT_DATA.portfolio || "";
                 window.toggleView('edit');
             } else { alert("Incorrect password"); }
         };
@@ -832,94 +887,94 @@ const firebaseConfig = {
                 alert("Passwords do not match. Please confirm your new password.");
                 return;
             }
+
             const saveButton = document.getElementById('saveEdit');
-            const originalSaveButtonText = saveButton.textContent;
             saveButton.disabled = true;
             saveButton.textContent = "Saving...";
+
             try {
-            const phones = Array.from(document.querySelectorAll('.phone-input')).map(i => i.value).filter(v => v.trim() !== "");
-            const emails = Array.from(document.querySelectorAll('.email-input')).map(i => i.value).filter(v => v.trim() !== "");
-            const customLinks = Array.from(document.querySelectorAll('#editCustomLinksList > div')).map(row => {
-                const tagInput = row.querySelector('.custom-link-tag');
-                const urlInput = row.querySelector('.custom-link-url');
-                return {
-                    tag: tagInput ? tagInput.value : '',
-                    url: urlInput ? urlInput.value : ''
-                };
-            }).filter(l => l.url && l.url.trim() !== "");
-            const socialLinks = Array.from(document.querySelectorAll('#editSocialsList > div')).map(row => {
-                const platform = row.querySelector('.social-platform');
-                const url = row.querySelector('.social-url');
-                return {
-                    platform: platform ? platform.value : '',
-                    url: url ? url.value : ''
-                };
-            }).filter(s => s.url && s.url.trim() !== "");
-            
-            const portfolioImgFinal = portfolioPreviewBase64 || CONTACT_DATA.portfolio || "";
-            const profileImgFinal = profileImagePreviewBase64 || CONTACT_DATA.image || "";
-            const logoImgFinal = logoImagePreviewBase64 || CONTACT_DATA.logo || "";
+                const phones = Array.from(document.querySelectorAll('.phone-input')).map(i => i.value).filter(v => v.trim() !== "");
+                const emails = Array.from(document.querySelectorAll('.email-input')).map(i => i.value).filter(v => v.trim() !== "");
+                const customLinks = Array.from(document.querySelectorAll('#editCustomLinksList > div')).map(row => {
+                    const tagInput = row.querySelector('.custom-link-tag');
+                    const urlInput = row.querySelector('.custom-link-url');
+                    return { tag: tagInput ? tagInput.value : '', url: urlInput ? urlInput.value : '' };
+                }).filter(l => l.url && l.url.trim() !== "");
+                const socialLinks = Array.from(document.querySelectorAll('#editSocialsList > div')).map(row => {
+                    const platform = row.querySelector('.social-platform');
+                    const url = row.querySelector('.social-url');
+                    return { platform: platform ? platform.value : '', url: url ? url.value : '' };
+                }).filter(s => s.url && s.url.trim() !== "");
 
-            const updated = {
-                ...CONTACT_DATA,
-                name: document.getElementById('editName').value,
-                title: document.getElementById('editTitle').value,
-                organization: document.getElementById('editOrg').value,
-                bio: document.getElementById('editBio').value,
-                image: profileImgFinal,
-                logo: logoImgFinal,
-                website: document.getElementById('editWebsite').value,
-                location: document.getElementById('editLocation').value,
-                qrLink: document.getElementById('editQrLink').value.trim(),
-                adminPassword: password1,
-                phones,
-                emails,
-                customLinks,
-                socialLinks,
-                portfolio: portfolioImgFinal,
-                colors: {
-                    cardBg: document.getElementById('colorCardBg').value,
-                    coverBg: document.getElementById('colorCoverBg').value,
-                    name: document.getElementById('colorName').value,
-                    org: document.getElementById('colorOrg').value,
-                    title: document.getElementById('colorTitle').value,
-                    bio: document.getElementById('colorBio').value,
-                    wave: document.getElementById('colorWave').value,
-                    mainBtn: document.getElementById('colorMainBtn').value,
-                    contactBtn: document.getElementById('colorContactBtn').value,
-                    utilBtn: document.getElementById('colorUtilBtn').value
+                // FIX: Only use the new base64 if the user actually selected a file;
+                // otherwise fall back to the existing stored URL (could be hosted or base64).
+                const profileImgFinal = profileImagePreviewBase64 || CONTACT_DATA.image || "";
+                const logoImgFinal   = logoImagePreviewBase64   || CONTACT_DATA.logo  || "";
+                const portfolioFinal = portfolioPreviewBase64   || CONTACT_DATA.portfolio || "";
+
+                const updated = {
+                    ...CONTACT_DATA,
+                    name: document.getElementById('editName').value,
+                    title: document.getElementById('editTitle').value,
+                    organization: document.getElementById('editOrg').value,
+                    bio: document.getElementById('editBio').value,
+                    image: profileImgFinal,
+                    logo: logoImgFinal,
+                    website: document.getElementById('editWebsite').value,
+                    location: document.getElementById('editLocation').value,
+                    qrLink: document.getElementById('editQrLink').value.trim(),
+                    adminPassword: password1,
+                    phones,
+                    emails,
+                    customLinks,
+                    socialLinks,
+                    portfolio: portfolioFinal,
+                    colors: {
+                        cardBg: document.getElementById('colorCardBg').value,
+                        coverBg: document.getElementById('colorCoverBg').value,
+                        name: document.getElementById('colorName').value,
+                        org: document.getElementById('colorOrg').value,
+                        title: document.getElementById('colorTitle').value,
+                        bio: document.getElementById('colorBio').value,
+                        wave: document.getElementById('colorWave').value,
+                        mainBtn: document.getElementById('colorMainBtn').value,
+                        contactBtn: document.getElementById('colorContactBtn').value,
+                        utilBtn: document.getElementById('colorUtilBtn').value
+                    }
+                };
+
+                CONTACT_DATA = normalizeContactData(updated);
+                cacheContactData(CONTACT_DATA);
+                renderUI();
+
+                // FIX: Switch view BEFORE cloud sync so the UI feels instant,
+                // but cloud sync now happens in the background WITH proper image upload.
+                window.toggleView('card');
+                saveButton.textContent = "Saved ✓";
+
+                if (isCloudSynced && firebaseClient) {
+                    // saveProfileToCloud handles image uploads to Storage before writing Firestore
+                    await saveProfileToCloud(CONTACT_DATA);
                 }
-            };
-            const localData = normalizeContactData(updated);
-            CONTACT_DATA = localData;
-            cacheContactData(CONTACT_DATA);
-            renderUI();
-            profileImagePreviewBase64 = CONTACT_DATA.image || "";
-            logoImagePreviewBase64 = CONTACT_DATA.logo || "";
-            portfolioPreviewBase64 = CONTACT_DATA.portfolio || "";
-            saveButton.textContent = "Saved";
-            window.toggleView('card');
-
-            if (isCloudSynced && firebaseClient) {
-                void saveProfileToCloud(localData);
-            }
+            } catch (err) {
+                console.error("Save failed:", err);
+                alert("Save failed: " + (err.message || err));
             } finally {
                 saveButton.disabled = false;
-                saveButton.textContent = originalSaveButtonText;
+                saveButton.textContent = "Save All Changes";
             }
         };
 
-            document.getElementById('resetProfileBtn').onclick = async () => {
+        document.getElementById('resetProfileBtn').onclick = async () => {
             if (!confirm("Are you sure you want to reset your profile to the original defaults? This cannot be undone.")) return;
             const resetData = normalizeContactData(DEFAULT_DATA);
             CONTACT_DATA = resetData;
             cacheContactData(CONTACT_DATA);
             renderUI();
-            profileImagePreviewBase64 = CONTACT_DATA.image || DEFAULT_DATA.image || "";
-            logoImagePreviewBase64 = CONTACT_DATA.logo || DEFAULT_DATA.logo || "";
-            portfolioPreviewBase64 = CONTACT_DATA.portfolio || "";
+            profileImagePreviewBase64 = "";
+            logoImagePreviewBase64 = "";
+            portfolioPreviewBase64 = "";
             window.toggleView('card');
-
             if (isCloudSynced && firebaseClient) {
                 void saveProfileToCloud(resetData);
             }
@@ -974,7 +1029,7 @@ const firebaseConfig = {
                 link.click();
                 if (devMsg.parentNode) devMsg.parentNode.removeChild(devMsg);
                 const orderBtn = document.getElementById('orderNfcBtn');
-                if(orderBtn) {
+                if (orderBtn) {
                     const msg = document.createElement('div');
                     msg.className = "w-full flex flex-col items-center justify-center p-3 text-center text-sm font-bold rounded-xl bg-green-50 text-green-700 border border-green-500 mt-2";
                     msg.innerHTML = `developed by Lomi <a href="tel:+251920508303" class="block underline">+251920508303</a>`;
